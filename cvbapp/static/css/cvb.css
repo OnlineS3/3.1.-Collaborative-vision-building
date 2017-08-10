@@ -1,0 +1,134 @@
+#vision_div {
+	border: 1px solid #0099CC;
+    width:745px;
+	position: relative;
+	float: left;
+	margin: 5px;
+}
+
+.div_title {
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding-top:5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	color: white;
+}
+
+.visionprofile_header h1{
+    font-size:26px;
+}
+
+.visionprofile_header {
+    border-bottom: 1px solid #0099CC;
+    background: #0099CC;
+    height: 60px;
+
+
+}
+
+.visionprofile_header h1 {
+    line-height: 50px;
+}
+
+ /* Dropdown Button */
+.dropbtn {
+    padding: 16px;
+    font-size: 16px;
+    cursor: pointer;
+	height:60px;
+    width: 60px;
+}
+
+.back_button {
+    padding: 16px;
+    font-size: 16px;
+    cursor: pointer;
+	height:60px;
+    width: 60px;
+}
+
+#session_create_button{
+    float:right;
+    height:20px;
+    margin-top:5px;
+}
+
+.search_button, #login_button{
+    height:28px;
+    width:50px;
+}
+
+.to_session_button, .search_button:hover {
+    cursor: pointer;
+}
+
+.to_session_div:hover{
+	background-color: #0080B3;
+}
+
+.to_session_button:hover{
+    color:white;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+    background-color: #0080B3;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+#myDropdown a{
+    font-size: 13px;
+	font-family: verdana,sans-serif
+}
+
+.phase_content {
+    padding:10px;
+}
+
+.cvb_button{
+    color:white;
+    border:1px solid #0099CC;
+    background-color:#0099CC;
+}
+
+.cvb_button:hover{
+     background-color: #0080B3;
+}
+
+#header-main .login-btn{
+    line-height: 1;
+}
+
+#header-main .register-btn{
+    line-height: 1;
+}

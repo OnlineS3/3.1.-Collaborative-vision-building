@@ -1,0 +1,47 @@
+{% extends "cvbapp/base.html" %}
+{% load static %}
+
+{% block addHead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/appmenu.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/roadmap.css' %}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.auth0.com/js/auth0/8.7/auth0.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script type="text/javascript" src="{% static 'js/roadmap.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div style="float:left; margin-left: 66px; width: 740px">
+	<h1>Guide</h1>
+
+    <p>To search for a vision session enter the term you would like to search for, select your search term type, and
+        then click the search button:</p></br>
+    <center><img src="{% static 'img/cvbapp_search.png' %}"></center></br>
+    <p>To access a vision session, simply click the access button to the right of the name and description:</p></br>
+    <center><img src="{% static 'img/cvbapp_vision_access.png' %}"></center></br>
+    <p>To create a vision session click the create button and fill out the form:</p></br>
+    <center><img src="{% static 'img/cvbapp_create.png' %}"></center></br>
+    <p>When a session is created users can use the ‘Step 2’ section to enter their Vision Statement suggestion:</p></br>
+    <center><img src="{% static 'img/cvbapp_step2.png' %}"></center></br>
+    <p>Once the owner of the session progresses to step three, everyone can expand a list of list of all suggested
+        statement. The owner of the session will be able to submit a draft vision statement, which encapsulates all the
+        suggestions:</p></br>
+    <center><img src="{% static 'img/cvbapp_step3.png' %}"></center></br>
+    <p>In step 4, the owner can set a time and date for an online chat. Everyone is provided a link to the chatroom,
+        where the Vision Statement can be discussed:</p></br>
+    <center><img src="{% static 'img/cvbapp_step4.png' %}"></center></br>
+    <p>In step 5, the owner finalizes the Vision Statement and creates a report detailing the decisions made:</p></br>
+    <center><img src="{% static 'img/cvbapp_step5.png' %}"></center></br>
+    <p>Finally, in step 6 anyone can export a summary of the Vision Building process to a pdf:</p></br>
+    <center><img src="{% static 'img/cvbapp_step6.png' %}"></center></br>
+
+</div>
+<!-- page content -->
+
+<!-- Page Menus -->
+<div style="float: left; margin-left: 66px; margin-bottom: 66px;">
+	{% include "cvbapp/online_steps.html" %}
+</div>
+<!-- Page Menus -->
+{% endblock %}

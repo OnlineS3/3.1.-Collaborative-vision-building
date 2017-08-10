@@ -1,0 +1,358 @@
+{% extends "cvbapp/base.html" %}
+{% load static %}
+
+{% block addHead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/appmenu.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/roadmap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/cvb.css' %}">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.auth0.com/js/auth0/8.7/auth0.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{% static 'js/roadmap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/cvb.js' %}"></script>
+
+<!-- Bootstrap Date-Picker Plugin -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+<!-- DATETIMEPICKER -->
+<link id="bsdp-css" href="bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+<script src="bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- CVBAPP Content -->
+    <div style="float:left; margin-left: 66px; width:745px;">
+        <h1>Collaborative Vision Building</h1>
+        <div id="vision_div">
+            <div id="phase_1">
+                <div class="visionprofile_header">
+                    <div id="back_btn_container" class="back_btn_container" style="display:inline-block;float:left;">
+                        <button class="back_button cvb_button" onclick="document.getElementById('back_to_main').submit()"><i class="fa fa-chevron-left fa-2x" aria-hidden="true"></i></button>
+                    </div>
+                    <h1 class="div_title" style="width:600px; display:inline-block;"> {{ session_name }} (Step: {{ phase }})</h1>
+                    {% if request.session.cvbapp_profile.nickname == user_email %}
+                        <div id="owner_dropdown" class="dropdown" style="float:right">
+                            <button onclick="dropdown('myDropdown')" class="dropbtn cvb_button"><i class="fa fa-chevron-down" aria-hidden="true"></i>
+    </button>
+                            <div id="myDropdown" class="dropdown-content">
+                                <a href="#" onclick="document.getElementById('edit_vision_form').submit()">Edit Vision Details</a>
+                                <a href="#" onclick="document.getElementById('advance_vision_form').submit()">Advance Vision</a>
+                                <a href="#" onclick="document.getElementById('decrease_vision_form').submit()">Decrease Vision</a>
+                                <a href="#" onclick="document.getElementById('delete_vision_form').submit()">Delete Vision</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="phase_content">
+                    <p><b>Owner:</b> {{ user_email }}</p>
+                    <p><b>Description:</b> {{ session_description }}</p>
+                </div>
+            </div>
+            {% if phase == 2 %}
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 2</h1>
+                </div>
+                <div class="phase_content">
+                    <div id="statement_submitted" style="{% if submitted_statement_p2 == "" %}display:none;{% endif %}">
+                        <p><b>Submitted: </b>{{ submitted_statement_p2 }}</p>
+                        <button class="cvb_button" id="edit_statement" onclick="editStatement('2')" action="{% url 'cvbapp_getstatement' %}">Edit Statement</button>
+                    </div>
+                    <p>Please submit your suggested vision statement for this session.</p>
+                    <div id="statement_form" style="{% if submitted_statement_p2 != "" %}display:none;{% endif %}">
+                        <form id="create_statement" method="post" action="{% url 'cvbapp_createstatement' %}">
+                            {% csrf_token %}
+                            <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
+                            <input id="create_statement_session" type="hidden" name="session_name" value="{{ session_name }}">
+                            <input id="create_statement_phase" type="hidden" name="phase" value="2">
+                        </form>
+                        <button style="margin-top:5px;" class="cvb_button" onclick="createStatement()">Submit Statement</button>
+                    </div>
+                </div>
+            {% endif %}
+            {% if phase > 2 %}
+                <div id="phase_2_sum">
+                    <div class="visionprofile_header">
+                        <h1 class="div_title">Step 2 Summary</h1>
+                    </div>
+                    <div class="phase_content">
+                        <div>
+                            <button id="expand_button" class="cvb_button" onclick="expand()" data-toggle="collapse" data-target="#submitted_statements">expand</button>
+                            <div id="submitted_statements" class="collapse" loaded="false"></div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if phase == 3 %}
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 3</h1>
+                </div>
+                <div class="phase_content">
+                    {% if request.session.cvbapp_profile.nickname == user_email %}
+                        <p>Step 2 has ended. Please review the submitted vision statements and submit a draft vision statement. Once this is complete, it will be possible to proceed to phase 4.</p>
+                        <div id="statement_form" style="{% if submitted_statement_p3 != "" %}display:none;{% endif %}">
+                            <form id="create_statement" method="post" action="{% url 'cvbapp_createstatement' %}">
+                                {% csrf_token %}
+                                <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
+                                <input id="create_statement_session" type="hidden" name="session_name" value="{{ session_name }}">
+                                <input id="create_statement_phase" type="hidden" name="phase" value="3">
+                            </form>
+                            <button style="margin-top:5px;" class="cvb_button" onclick="createStatement()">Submit Statement</button>
+                        </div>
+                        <div id="statement_submitted" style="{% if submitted_statement_p3 == "" %}display:none;{% endif %}">
+                            <p><b>Submitted: </b>{{ submitted_statement_p3 }}</p>
+                            <button class="cvb_button" id="edit_statement" onclick="editStatement('3')" action="{% url 'cvbapp_getstatement' %}">Edit Statement</button>
+                        </div>
+                    {% else %}
+                        <div>
+                            <p>Step 2 has ended. Vision statements are now being reviewed. Step 4 will begin soon.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if phase > 3 %}
+                <div id="phase_3_sum">
+                    <script>
+                        $( document ).ready(function() {
+                            getStatement('3');
+                            getUserCount();
+                        });
+                    </script>
+                    <div class="visionprofile_header">
+                        <h1 class="div_title">Step 3 Summary</h1>
+                    </div>
+                    <div class="phase_content">
+                        <p id="draft_vision_statement"><b>Draft Vision Statement: </b></p>
+                    </div>
+                </div>
+            {% endif %}
+            {% if phase == 4 %}
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 4</h1>
+                </div>
+                <div class="phase_content">
+                    {% if request.session.cvbapp_profile.nickname == user_email %}
+                        {% if submitted_meeting_p4 == "" %}
+                            <div id="form_div">
+                                <p>Please schedule a time for the Vision Statement Draft review.</p>
+                                <div style="clear:both;">
+                                    <!-- Form code begins -->
+                                    <form id="datetime_submit" method="post" action="createscheduledmeeting" style="clear:both;">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="form-group col-xs-6" style="width:200px; clear:none;"> <!-- Date input -->
+                                                <label class="control-label" for="date">Date</label>
+                                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
+                                            </div>
+                                            <div class="form-group col-xs-6" style="width:200px;">
+                                                <label class="control-label" for="hour">Hour</label>
+                                                <select id="hour" name="hour" class="form-control">
+                                                    <option selected="selected">01</option>
+                                                    <option>02</option>
+                                                    <option>03</option>
+                                                    <option>04</option>
+                                                    <option>05</option>
+                                                    <option>06</option>
+                                                    <option>07</option>
+                                                    <option>08</option>
+                                                    <option>09</option>
+                                                    <option>10</option>
+                                                    <option>11</option>
+                                                    <option>12</option>
+                                                    <option>13</option>
+                                                    <option>14</option>
+                                                    <option>15</option>
+                                                    <option>16</option>
+                                                    <option>17</option>
+                                                    <option>18</option>
+                                                    <option>19</option>
+                                                    <option>20</option>
+                                                    <option>21</option>
+                                                    <option>22</option>
+                                                    <option>23</option>
+                                                    <option>24</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group col-xs-6" style="width:200px;">
+                                                <label class="control-label" for="minute">Minute</label>
+                                                <select id="minute" name="minute" class="form-control" de>
+                                                    <option selected="selected">00</option>
+                                                    <option>15</option>
+                                                    <option>30</option>
+                                                    <option>45</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="session_name" value="{{ session_name }}">
+                                        <input id="datetime_phase" type="hidden" name="phase" value="4">
+                                    </form>
+                                    <button class="cvb_button" onclick="submitTimeData()">Submit</button>
+                                     <!-- Form code ends -->
+                                    <script>
+                                        $(document).ready(function(){
+                                          var date_input=$('input[name="date"]'); //our date input has the name "date"
+                                          var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+                                          var options={
+                                            format: 'mm/dd/yyyy',
+                                            container: container,
+                                            todayHighlight: true,
+                                            autoclose: true,
+                                          };
+                                          date_input.datepicker(options);
+                                        })
+                                    </script>
+                                </div>
+                            </div>
+                            <div id="datetime_div" style="display:none;">
+                                <p>The meeting will be held at:</p>
+                                <p id="datetime_text"></p>
+                            </div>
+                        {% else %}
+                            <p>The meeting will be held at:</p>
+                            <p><b>{{ submitted_meeting_p4 }}</b></p>
+                        {% endif %}
+                    {% else %}
+                        {% if submitted_meeting_p4 == "" %}
+                            <p>The owner of this session is scheduling a time to hold the Vision Statement Draft review meeting.</p>
+                        {% else %}
+                            <p>The meeting will be held at:</p>
+                            <p><b>{{ submitted_meeting_p4 }}</b></p>
+                        {% endif %}
+                    {% endif %}
+
+                    <p><b>Rocket Chat Link:</b> <a id="channel_link" href="{{ rc_channel }}">{{ rc_channel }}</a></p>
+                    <p id="usercount"><b>User Count: </b></p>
+                </div>
+            {% endif %}
+            {% if phase > 4 %}
+                <div id="phase_4_sum">
+                    <div class="visionprofile_header">
+                        <h1 class="div_title">Step 4 Summary</h1>
+                    </div>
+                    <div class="phase_content">
+                        <p>Step 4 is done</p>
+                        <div id="message_history_p4"></div>
+                        <button class="cvb_button" id="get_history_button" onclick="getChannelHistory('_p4')">get history</button>
+                    </div>
+                </div>
+            {% endif %}
+            {% if phase == 5 %}
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 5</h1>
+                </div>
+                <div class="phase_content">
+                    {% if request.session.cvbapp_profile.nickname == user_email %}
+                        <p>Step 4 has been completed. Using the discussion from Step 4, finalize a vision statement and
+                            produce a report detailing the decisions made.</p>
+                        <div id="statement_form" style="{% if submitted_statement_p5 != "" %}display:none;{% endif %}">
+                            <form id="create_statement" method="post" action="{% url 'cvbapp_createstatement' %}">
+                                {% csrf_token %}
+                                <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
+                                <input id="create_statement_session" type="hidden" name="session_name" value="{{ session_name }}">
+                                <input id="create_statement_phase" type="hidden" name="phase" value="5">
+                            </form>
+                            <button style="margin-top:5px;" class="cvb_button" onclick="createStatement()">Submit Statement</button>
+                        </div>
+                        <div id="statement_submitted" style="{% if submitted_statement_p5 == "" %}display:none;{% endif %}">
+                            <p><b>Submitted: </b>{{ submitted_statement_p5 }}</p>
+                            <button class="cvb_button" id="edit_statement" onclick="editStatement('5')" action="{% url 'cvbapp_getstatement' %}">Edit Statement</button>
+                        </div>
+                        <textarea id="report_textarea" placeholder="report" style="width:400px; height:300px;"></textarea>
+                        <p id="charcount"><b>Remaining Characters: </b>1024</p>
+                        {% if submitted_report != "" %}
+                            <script>
+                                document.getElementById('report_textarea').value = '{{ submitted_report }}'
+                            </script>
+                        {% endif %}
+                        <button class="cvb_button" action="{% url 'cvbapp_createvisionreport' %}" id="submit_report" onclick="createReport()">Submit Report</button>
+                        <script>
+                            $('#report_textarea').on('keyup', function(event) {
+                               var count = 1024 - $(this).val().length;
+                               if (count < 0) {
+                                  $(this).val($(this).val().substring(0, 1024));
+                               }
+                               document.getElementById("charcount").innerHTML = "<b>Remaining Characters: </b>" + (1024 - $(this).val().length);
+                            });
+                        </script>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if phase > 5 %}
+                <div id="phase_5_sum">
+                    <div class="visionprofile_header">
+                        <h1 class="div_title">Step 5 Summary</h1>
+                    </div>
+                    <div class="phase_content">
+                        {% if submitted_statement_p5 != "" %}
+                            <p><b>Statement</b><br>{{ submitted_statement_p5 }}</p>
+                        {% endif %}
+                        {% if submitted_report != "" %}
+                            <p><b>Report</b><br>{{ submitted_report }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if phase == 6 %}
+                <div id="phase_6">
+                    <div class="visionprofile_header">
+                        <h1 class="div_title">Step 6</h1>
+                    </div>
+                    <div class="phase_content">
+                        {% if submitted_statement_p5 != "" %}
+                            <p><b>Final Statement</b><br>{{ submitted_statement_p5 }}</p>
+                        {% endif %}
+                        <form id="export_form" method="post" action="{% url 'cvbapp_exporttopdf' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="html_string"  id="html_string" value="">
+                        </form>
+                        <button class="cvb_button" id="export_pdf" onclick="printPDF();" action="{% url 'cvbapp_exporttopdf' %}">Export</button>
+                    </div>
+                </div>
+            {% endif %}
+            {% if phase > 6 %}
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 6 Summary</h1>
+                </div>
+            {% endif %}
+		</div>
+        <form id="back_to_main" method="get" action="{% url 'cvbapp_index' %}">
+        </form>
+        {% if request.session.cvbapp_profile.nickname == user_email %}
+            <form id="edit_vision_form" method="get" action="{% url 'cvbapp_editvisionprofile' %}">
+                <input type="hidden" name="session_name" value="{{ session_name }}">
+            </form>
+            <form id="advance_vision_form" method="post" action="{% url 'cvbapp_updatevisionprofile' %}">
+                {% csrf_token %}
+                <input type="hidden" name="old_session_name" value="{{ session_name }}">
+                <input type="hidden" name="session_name" value="{{ session_name }}">
+                <input type="hidden" name="phase_advance" value="true">
+                <input type="hidden" name="redirect_url" value="{% url 'cvbapp_visionprofile' %}">
+            </form>
+            <form id="decrease_vision_form" method="post" action="{% url 'cvbapp_updatevisionprofile' %}">
+                {% csrf_token %}
+                <input type="hidden" name="old_session_name" value="{{ session_name }}">
+                <input type="hidden" name="session_name" value="{{ session_name }}">
+                <input type="hidden" name="phase_decrease" value="true">
+                <input type="hidden" name="redirect_url" value="{% url 'cvbapp_visionprofile' %}">
+            </form>
+            <form id="delete_vision_form" method="post" action="{% url 'cvbapp_deletesession' %}">
+                {% csrf_token %}
+                <input type="hidden" name="session_name" value="{{ session_name }}">
+                <input type="hidden" name="deleted_vision" value="true">
+            </form>
+        {% endif %}
+
+    </div>
+    <button id="get_statements" style="display:none;" action="{% url 'cvbapp_getstatements' %}"></button>
+    <button id="get_statement" style="display:none;" action="{% url 'cvbapp_getstatement' %}"></button>
+    <button id="get_history" style="display:none;" action="{% url 'cvbapp_getchannelhistory' %}" channel_link="{{ rc_channel }}"></button>
+    <button id="session_name" style="display:none;" value="{{ session_name }}"></button>
+<!-- CVBAPP Content END -->
+<!-- Page Menus -->
+    <div style="float: left; margin-left: 66px; margin-top: 61px">
+        {% include "cvbapp/online_steps.html" %}
+    </div>
+<!-- Page Menus -->
+{% endblock %}

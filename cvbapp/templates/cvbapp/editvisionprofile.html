@@ -1,0 +1,38 @@
+{% extends "cvbapp/base.html" %}
+{% load static %}
+
+{% block addHead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/appmenu.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/roadmap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/cvb.css' %}">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.auth0.com/js/auth0/8.7/auth0.min.js"></script>
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+<script type="text/javascript" src="{% static 'js/roadmap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/cvb.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<!-- CVBAPP Content -->
+    <div style="float:left; margin-left: 66px; width:745px;">
+        <h1>Collaborative Vision Building</h1>
+        <form method="post" action="{% url 'cvbapp_updatevisionprofile' %}?session_name={{ session_name }}&session_description={{ session_description }}">
+            {% csrf_token %}
+            <p>Vision Session Name:</p>
+            <input type="text" name="session_name" value="{{ session_name }}">
+            <p>Vision Session Description</p>
+            <input type="text" name="session_description" value="{{ session_description }}">
+            <input type="hidden" name="old_session_name" value="{{ session_name }}">
+            <input type="hidden" name="redirect_url" value="/cvbapp/visionprofile">
+            <input type="submit" value="Save Changes">
+        </form>
+    </div>
+    <button onclick="console.log('{% url 'cvbapp_updatevisionprofile' %}')">Check url</button>
+<!-- CVBAPP Content END -->
+<!-- Page Menus -->
+    <div style="float: left; margin-left: 66px; margin-top: 61px">
+        {% include "cvbapp/online_steps.html" %}
+    </div>
+<!-- Page Menus -->
+{% endblock %}
