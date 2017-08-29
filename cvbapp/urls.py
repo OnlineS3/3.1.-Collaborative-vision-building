@@ -25,4 +25,5 @@ urlpatterns = [
 	url(r'^createvisionreport$', views.create_vision_report, name='cvbapp_createvisionreport'),
 	url(r'^exporttopdf$', views.export_to_pdf, name='cvbapp_exporttopdf'),
 	url(r'^callback$', views.callback, name='cvbapp_callback'),
+	url(r'^access$', views.callback, name='cvbapp_access')
 ]
