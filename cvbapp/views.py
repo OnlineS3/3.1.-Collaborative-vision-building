@@ -34,6 +34,9 @@ def guide(request):
 def about(request):
 	return render(request, 'cvbapp/about.html')
 
+def access(request):
+	return render(request, 'cvbapp/access_app.html')
+
 def related(request):
 	return render(request, 'cvbapp/related_documents.html')
 
