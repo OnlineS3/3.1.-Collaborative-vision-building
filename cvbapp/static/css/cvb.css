@@ -125,6 +125,16 @@
      background-color: #0080B3;
 }
 
+.cvb_button[disabled]{
+    color:white;
+    border:1px solid gray;
+    background-color: gray;
+}
+
+.cvb_button:hover[disabled]{
+     background-color: gray;
+}
+
 #header-main .login-btn{
     line-height: 1;
 }
