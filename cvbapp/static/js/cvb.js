@@ -12,7 +12,7 @@ $( document ).ready(function() {
       e.preventDefault();
       auth.authorize({
         audience: 'https://' + 'onlines3.eu.auth0.com' + '/userinfo',
-        scope: 'openid profile',
+        scope: 'openid profile email',
         responseType: 'code',
         redirectUri: 'http://li1088-54.members.linode.com:8082/cvbapp/callback'
       });

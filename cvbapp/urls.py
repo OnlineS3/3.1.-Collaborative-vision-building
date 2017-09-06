@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
 	url(r'^$', views.index, name='cvbapp_index'),
-	url(r'^about$', views.about, name='cvbapp_about'),
 	url(r'^guide$', views.guide, name='cvbapp_guide'),
 	url(r'^related$', views.related, name='cvbapp_related'),
 	url(r'^login$', views.login_view, name='cvbapp_loginview'),

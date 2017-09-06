@@ -31,9 +31,6 @@ def index(request):
 def guide(request):
 	return render(request, 'cvbapp/guide.html')
 
-def about(request):
-	return render(request, 'cvbapp/about.html')
-
 def access(request):
 	return render(request, 'cvbapp/access_app.html')
 
@@ -63,7 +60,7 @@ def create_visionsession(request):
 
 		channel_instance = Channel.objects.create(room_id=j["channel"]["_id"], channel_name=j["channel"]["name"], rc_channel=rocketchat_url+'/channel/' + request.POST['session_name'].replace(" ", ""))
 
-		visionsession_instance = VisionSession.objects.create(user_email=request.session['cvbapp_profile']['nickname'],session_name=request.POST['session_name'],session_description=request.POST['session_description'],phase=2, channel=channel_instance)
+		visionsession_instance = VisionSession.objects.create(user_email=request.session['cvbapp_profile']['email'],session_name=request.POST['session_name'],session_description=request.POST['session_description'],phase=2, channel=channel_instance)
 		visionsession_instance.save()
 		return redirect('cvbapp_index')
 	else:
@@ -106,20 +103,20 @@ def get_vision_profile(request):
 	visionsession_instance = VisionSession.objects.filter(session_name=session_name)
 
 	submitted_statement_p2 = ""
-	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['nickname'], session=visionsession_instance, phase=2).count() > 0:
-		submitted_statement_p2 = VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['nickname'],
+	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'], session=visionsession_instance, phase=2).count() > 0:
+		submitted_statement_p2 = VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'],
 									session=visionsession_instance, phase=2)[0].vision_statement
 
 	submitted_statement_p3 = ""
-	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['nickname'],
+	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'],
 									  session=visionsession_instance, phase=3).count() > 0:
-		submitted_statement_p3 = VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['nickname'],
+		submitted_statement_p3 = VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'],
 									session=visionsession_instance, phase=3)[0].vision_statement
 
 	submitted_statement_p5 = ""
-	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['nickname'],
+	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'],
 									  session=visionsession_instance, phase=5).count() > 0:
-		submitted_statement_p5 = VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['nickname'],
+		submitted_statement_p5 = VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'],
 									session=visionsession_instance, phase=5)[0].vision_statement
 		print "p5: " + submitted_statement_p5
 	print "p5: " + submitted_statement_p5
@@ -199,17 +196,17 @@ def search_sessions(request):
 def create_vision_statement(request):
 	vision_session_instance = VisionSession.objects.get(session_name=request.POST['session_name'])
 
-	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['nickname'],session=vision_session_instance,phase=request.POST['phase']).count() >0:
+	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'],session=vision_session_instance,phase=request.POST['phase']).count() >0:
 		#edit statement
 		print request.POST['phase']
-		vision_statement_instance = VisionStatement.objects.get(user_email=request.session['cvbapp_profile']['nickname'],session=vision_session_instance,phase=request.POST['phase'])
+		vision_statement_instance = VisionStatement.objects.get(user_email=request.session['cvbapp_profile']['email'],session=vision_session_instance,phase=request.POST['phase'])
 		vision_statement_instance.vision_statement = request.POST['vision_statement']
 		vision_statement_instance.save()
 	else:
 		#create new
 		print request.POST['phase']
 		vision_statement_instance = VisionStatement.objects.create(session=vision_session_instance,
-																   user_email=request.session['cvbapp_profile']['nickname'],
+																   user_email=request.session['cvbapp_profile']['email'],
 																   vision_statement=request.POST['vision_statement'],
 																   phase=request.POST['phase'])
 		vision_statement_instance.save()
@@ -218,7 +215,7 @@ def create_vision_statement(request):
 
 def get_vision_statement(request):
 	vision_session_instance = VisionSession.objects.get(session_name=request.GET['session_name'])
-	vision_statement_instance = VisionStatement.objects.get(user_email=request.session['cvbapp_profile']['nickname'], session=vision_session_instance,phase=request.GET['phase'])
+	vision_statement_instance = VisionStatement.objects.get(user_email=request.session['cvbapp_profile']['email'], session=vision_session_instance,phase=request.GET['phase'])
 	return HttpResponse(vision_statement_instance.vision_statement)
 
 
