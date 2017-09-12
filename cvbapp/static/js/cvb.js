@@ -1,5 +1,8 @@
 $( document ).ready(function() {
-    getSessions();
+    if(document.getElementById("visionsession_list"))
+	{
+		getSessions();
+    }
 
     var auth = new auth0.WebAuth({
     domain: 'onlines3.eu.auth0.com',
@@ -9,6 +12,15 @@ $( document ).ready(function() {
 
     $('.login-btn').click(function(e) {
     	console.log("testing");
+      e.preventDefault();
+      auth.authorize({
+        audience: 'https://' + 'onlines3.eu.auth0.com' + '/userinfo',
+        scope: 'openid profile email',
+        responseType: 'code',
+        redirectUri: 'http://li1088-54.members.linode.com:8082/cvbapp/callback'
+      });
+    });
+    $('.register-btn').click(function(e) {
       e.preventDefault();
       auth.authorize({
         audience: 'https://' + 'onlines3.eu.auth0.com' + '/userinfo',
