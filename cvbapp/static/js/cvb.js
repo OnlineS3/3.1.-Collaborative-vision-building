@@ -9,6 +9,7 @@ $( document ).ready(function() {
 	var tour = new Tour({
 		backdrop:"true",
 		onEnd: function (tour) {
+			window.location = document.getElementById("tool").getAttribute("href");
 			if(document.getElementById("visionsession_list"))
 			{
 				getSessions();

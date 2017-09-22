@@ -4,7 +4,6 @@
 {% block addHead %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/appmenu.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/roadmap.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'css/cvb.css' %}">
 
 <!-- jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -19,7 +18,6 @@
 
 <script src="https://cdn.auth0.com/js/auth0/8.7/auth0.min.js"></script>
 <script type="text/javascript" src="{% static 'js/roadmap.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/cvb.js' %}"></script>
 
 <!-- Bootstrap Date-Picker Plugin -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
@@ -58,15 +56,17 @@
                 </div>
             </div>
 
-            <div id="phase2" class="visionprofile_header">
-                <h1 class="div_title">Step 2</h1>
-            </div>
-            <div class="phase_content">
-                <div id="statement_submitted">
-                    <p><b>Submitted: </b>An example submitted statement</p>
-                    <button class="cvb_button" id="edit_statement">Edit Statement</button>
+            <div id="phase2">
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 2</h1>
                 </div>
-                <p>Please submit your suggested vision statement for this session.</p>
+                <div class="phase_content">
+                    <div id="statement_submitted">
+                        <p><b>Submitted: </b>An example submitted statement</p>
+                        <button class="cvb_button" id="edit_statement">Edit Statement</button>
+                    </div>
+                    <p>Please submit your suggested vision statement for this session.</p>
+                </div>
             </div>
 
             <div id="phase_2_sum">
@@ -81,16 +81,18 @@
                 </div>
             </div>
 
-            <div id="phase3" class="visionprofile_header">
-                <h1 class="div_title">Step 3</h1>
-            </div>
-            <div class="phase_content">
-                <p>Step 2 has ended. Please review the submitted vision statements and submit a draft vision statement. Once this is complete, it will be possible to proceed to phase 4.</p>
-                <div id="statement_form">
-                    <form id="create_statement">
-                        <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
-                    </form>
-                    <button style="margin-top:5px;" class="cvb_button">Submit Statement</button>
+            <div id="phase3">
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 3</h1>
+                </div>
+                <div class="phase_content">
+                    <p>Step 2 has ended. Please review the submitted vision statements and submit a draft vision statement. Once this is complete, it will be possible to proceed to phase 4.</p>
+                    <div id="statement_form">
+                        <form id="create_statement">
+                            <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
+                        </form>
+                        <button style="margin-top:5px;" class="cvb_button">Submit Statement</button>
+                    </div>
                 </div>
             </div>
 
@@ -103,16 +105,19 @@
                 </div>
             </div>
 
-            <div id="phase4" class="visionprofile_header">
-                <h1 class="div_title">Step 4</h1>
-            </div>
-            <div class="phase_content">
-                <p>The meeting will be held at:</p>
-                <p><b>08/25/2017-12:00</b></p>
+            <div id="phase4">
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 4</h1>
+                </div>
+                <div class="phase_content">
+                    <p>The meeting will be held at:</p>
+                    <p><b>08/25/2017-12:00</b></p>
 
-                <p><b>Rocket Chat Link:</b> <a id="channel_link" href="chat url">Chat URL</a></p>
-                <p id="usercount"><b>User Count: </b></p>
+                    <p><b>Rocket Chat Link:</b> <a id="channel_link" href="chat url">Chat URL</a></p>
+                    <p id="usercount"><b>User Count: </b></p>
+                </div>
             </div>
+
 
 
             <div id="phase_4_sum">
@@ -126,28 +131,30 @@
                 </div>
             </div>
 
-
-            <div id="phase5" class="visionprofile_header">
-                <h1 class="div_title">Step 5</h1>
-            </div>
-            <div class="phase_content">
-                <p>Step 4 has been completed. Using the discussion from Step 4, finalize a vision statement and
-                    produce a report detailing the decisions made.</p>
-                <div id="statement_form">
-                    <form id="create_statement">
-                        <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
-                    </form>
-                    <button style="margin-top:5px;" class="cvb_button">Submit Statement</button>
+            <div id="phase5">
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 5</h1>
                 </div>
-                <div id="statement_submitted" style="{% if submitted_statement_p5 == "" %}display:none;{% endif %}">
-                    <p><b>Submitted: </b>{{ submitted_statement_p5 }}</p>
-                    <button class="cvb_button" id="edit_statement">Edit Statement</button>
-                </div>
-                <textarea id="report_textarea" placeholder="report" style="width:400px; height:300px;"></textarea>
-                <p id="charcount"><b>Remaining Characters: </b>1024</p>
+                <div class="phase_content">
+                    <p>Step 4 has been completed. Using the discussion from Step 4, finalize a vision statement and
+                        produce a report detailing the decisions made.</p>
+                    <div id="statement_form">
+                        <form id="create_statement">
+                            <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
+                        </form>
+                        <button style="margin-top:5px;" class="cvb_button">Submit Statement</button>
+                    </div>
+                    <div id="statement_submitted" style="{% if submitted_statement_p5 == "" %}display:none;{% endif %}">
+                        <p><b>Submitted: </b>{{ submitted_statement_p5 }}</p>
+                        <button class="cvb_button" id="edit_statement">Edit Statement</button>
+                    </div>
+                    <textarea id="report_textarea" placeholder="report" style="width:400px; height:300px;"></textarea>
+                    <p id="charcount"><b>Remaining Characters: </b>1024</p>
 
-                <button class="cvb_button" action="{% url 'cvbapp_createvisionreport' %}" id="submit_report" onclick="createReport()">Submit Report</button>
+                    <button class="cvb_button" action="{% url 'cvbapp_createvisionreport' %}" id="submit_report" onclick="createReport()">Submit Report</button>
+                </div>
             </div>
+
 
 
             <div id="phase_5_sum">
@@ -161,8 +168,8 @@
             </div>
 
 
-            <div id="phase_6">
-                <div id="phase6" class="visionprofile_header">
+            <div id="phase6">
+                <div class="visionprofile_header">
                     <h1 class="div_title">Step 6</h1>
                 </div>
                 <div class="phase_content">
