@@ -1,0 +1,189 @@
+{% extends "cvbapp/base.html" %}
+{% load static %}
+
+{% block addHead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/appmenu.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/roadmap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/cvb.css' %}">
+
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- Walk-through -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.11.0/js/bootstrap-tour.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.11.0/css/bootstrap-tour.min.css" />
+
+<script src="https://cdn.auth0.com/js/auth0/8.7/auth0.min.js"></script>
+<script type="text/javascript" src="{% static 'js/roadmap.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/cvb.js' %}"></script>
+
+<!-- Bootstrap Date-Picker Plugin -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+
+<!-- DATETIMEPICKER -->
+<link id="bsdp-css" href="bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+<script src="bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<!-- CVBAPP Content -->
+    <div style="float:left; margin-left: 66px; width:745px;">
+        <h1>Collaborative Vision Building</h1>
+        <div id="vision_div">
+            <div id="phase_1">
+                <div class="visionprofile_header">
+                    <div id="back_btn_container" class="back_btn_container" style="display:inline-block;float:left;">
+                        <button class="back_button cvb_button" onclick="document.getElementById('back_to_main').submit()"><i class="fa fa-chevron-left fa-2x" aria-hidden="true"></i></button>
+                    </div>
+                    <h1 class="div_title" style="width:600px; display:inline-block;"> Name of Session (Step: 6)</h1>
+                    <div id="owner_dropdown" class="dropdown" style="float:right">
+                        <button onclick="dropdown('myDropdown')" class="dropbtn cvb_button"><i class="fa fa-chevron-down" aria-hidden="true"></i>
+</button>
+                        <div id="myDropdown" class="dropdown-content">
+                            <a href="#">Edit Vision Details</a>
+                            <a href="#">Advance Vision</a>
+                            <a href="#">Decrease Vision</a>
+                            <a href="#">Delete Vision</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="phase_content">
+                    <p><b>Owner:</b> example_user</p>
+                    <p><b>Description:</b> Descripiton of Session</p>
+                </div>
+            </div>
+
+            <div id="phase2" class="visionprofile_header">
+                <h1 class="div_title">Step 2</h1>
+            </div>
+            <div class="phase_content">
+                <div id="statement_submitted">
+                    <p><b>Submitted: </b>An example submitted statement</p>
+                    <button class="cvb_button" id="edit_statement">Edit Statement</button>
+                </div>
+                <p>Please submit your suggested vision statement for this session.</p>
+            </div>
+
+            <div id="phase_2_sum">
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 2 Summary</h1>
+                </div>
+                <div class="phase_content">
+                    <div>
+                        <button id="expand_button" class="cvb_button" onclick="expand()" data-toggle="collapse" data-target="#submitted_statements">expand</button>
+                        <div id="submitted_statements" class="collapse" loaded="false"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="phase3" class="visionprofile_header">
+                <h1 class="div_title">Step 3</h1>
+            </div>
+            <div class="phase_content">
+                <p>Step 2 has ended. Please review the submitted vision statements and submit a draft vision statement. Once this is complete, it will be possible to proceed to phase 4.</p>
+                <div id="statement_form">
+                    <form id="create_statement">
+                        <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
+                    </form>
+                    <button style="margin-top:5px;" class="cvb_button">Submit Statement</button>
+                </div>
+            </div>
+
+            <div id="phase_3_sum">
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 3 Summary</h1>
+                </div>
+                <div class="phase_content">
+                    <p id="draft_vision_statement"><b>Draft Vision Statement: </b>An example draft vision statement</p>
+                </div>
+            </div>
+
+            <div id="phase4" class="visionprofile_header">
+                <h1 class="div_title">Step 4</h1>
+            </div>
+            <div class="phase_content">
+                <p>The meeting will be held at:</p>
+                <p><b>08/25/2017-12:00</b></p>
+
+                <p><b>Rocket Chat Link:</b> <a id="channel_link" href="chat url">Chat URL</a></p>
+                <p id="usercount"><b>User Count: </b></p>
+            </div>
+
+
+            <div id="phase_4_sum">
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 4 Summary</h1>
+                </div>
+                <div class="phase_content">
+                    <p>Step 4 is done</p>
+                    <div id="message_history_p4"></div>
+                    <button class="cvb_button" id="get_history_button" onclick="getChannelHistory('_p4')">get history</button>
+                </div>
+            </div>
+
+
+            <div id="phase5" class="visionprofile_header">
+                <h1 class="div_title">Step 5</h1>
+            </div>
+            <div class="phase_content">
+                <p>Step 4 has been completed. Using the discussion from Step 4, finalize a vision statement and
+                    produce a report detailing the decisions made.</p>
+                <div id="statement_form">
+                    <form id="create_statement">
+                        <input style="width:723px;" id="vision_statement" type="text" name="vision_statement" placeholder="Vision statement...">
+                    </form>
+                    <button style="margin-top:5px;" class="cvb_button">Submit Statement</button>
+                </div>
+                <div id="statement_submitted" style="{% if submitted_statement_p5 == "" %}display:none;{% endif %}">
+                    <p><b>Submitted: </b>{{ submitted_statement_p5 }}</p>
+                    <button class="cvb_button" id="edit_statement">Edit Statement</button>
+                </div>
+                <textarea id="report_textarea" placeholder="report" style="width:400px; height:300px;"></textarea>
+                <p id="charcount"><b>Remaining Characters: </b>1024</p>
+
+                <button class="cvb_button" action="{% url 'cvbapp_createvisionreport' %}" id="submit_report" onclick="createReport()">Submit Report</button>
+            </div>
+
+
+            <div id="phase_5_sum">
+                <div class="visionprofile_header">
+                    <h1 class="div_title">Step 5 Summary</h1>
+                </div>
+                <div class="phase_content">
+                    <p><b>Statement</b><br>An example statement</p>
+                    <p><b>Report</b><br>An example report</p>
+                </div>
+            </div>
+
+
+            <div id="phase_6">
+                <div id="phase6" class="visionprofile_header">
+                    <h1 class="div_title">Step 6</h1>
+                </div>
+                <div class="phase_content">
+
+                    <p><b>Final Statement</b><br>An example final statement</p>
+
+                    <button class="cvb_button" id="export_pdf">Export</button>
+                </div>
+            </div>
+		</div>
+
+
+    </div>
+    <button id="get_statements" style="display:none;" action="{% url 'cvbapp_getstatements' %}"></button>
+    <button id="get_statement" style="display:none;" action="{% url 'cvbapp_getstatement' %}"></button>
+    <button id="get_history" style="display:none;" action="{% url 'cvbapp_getchannelhistory' %}" channel_link="{{ rc_channel }}"></button>
+    <button id="session_name" style="display:none;" value="{{ session_name }}"></button>
+<!-- CVBAPP Content END -->
+<!-- Page Menus -->
+    <div style="float: left; margin-left: 66px; margin-top: 61px">
+        <!-- {% include "cvbapp/online_steps.html" %} -->
+    </div>
+<!-- Page Menus -->
+{% endblock %}

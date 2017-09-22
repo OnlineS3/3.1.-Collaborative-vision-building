@@ -5,9 +5,19 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/appmenu.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/roadmap.css' %}">
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<!-- Bootstrap -->
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<!-- Walk-through -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.11.0/js/bootstrap-tour.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.11.0/css/bootstrap-tour.min.css" />
+
 <script src="https://cdn.auth0.com/js/auth0/8.7/auth0.min.js"></script>
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
 <script type="text/javascript" src="{% static 'js/roadmap.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/cvb.js' %}"></script>
 {% endblock %}
@@ -18,11 +28,16 @@
         {% if delete_success %}
             alert('Vision deleted successfully.')
         {% endif %}
+
+        $(document).ready(function(){
+
+        });
     </script>
+
     <div style="float:left; margin-left: 66px; width:745px;">
         <h1>Collaborative Vision Building</h1>
 
-        <div style="border: 1px solid #0099CC; height:30px">
+        <div id="searchdiv" style="border: 1px solid #0099CC; height:30px">
             <input style="border:none;height:28px;float:left;width:543px;font-size:15px;" id="searchterm" type="text" name="searchterm" placeholder="Search term...">
             <div class="dropdown" style="height:28px;background-color:#1AB3E6;float:left;">
                 <div id="dropdown_selection" style="padding-top:5px;float:left;height:28px;text-align:center;width:100px;font-size:15px;color:white;font-family: verdana,sans-serif">All</div>
@@ -75,7 +90,7 @@
 
         {% if request.session.cvbapp_profile.nickname %}
             <div style="float:right;width:470px;">
-                <button class="cvb_button" onclick="dropdown('create_dropdown')" style="margin-bottom:66px;float:right;height:30px;font-size:15px;text-align:center;">Create Session <i class="fa fa-plus" aria-hidden="true"></i></button>
+                <button id="createbtn" class="cvb_button" onclick="dropdown('create_dropdown')" style="margin-bottom:66px;float:right;height:30px;font-size:15px;text-align:center;">Create Session <i class="fa fa-plus" aria-hidden="true"></i></button>
                 <div id="create_dropdown" class="dropdown-content" style="width:470px;margin-top:30px;border:1px solid #0099CC;position:absolute;float:right;padding:5px;">
                     <div id="vision_create_div" style="font-size: 13px;font-family: verdana,sans-serif">
                         <label style="float:left;clear:left;"><b>Name:</b></label>
@@ -101,7 +116,7 @@
             </div>
         {% else %}
             <div style="float:right;width:470px;">
-                <button class="cvb_button" style="margin-bottom:66px;float:right;height:30px;font-size:15px;text-align:center;pointer-events: auto;" title="Please log in before creating a new session." disabled>Create Session <i class="fa fa-plus" aria-hidden="true"></i></button>
+                <button id="createbtn" class="cvb_button" style="margin-bottom:66px;float:right;height:30px;font-size:15px;text-align:center;pointer-events: auto;" title="Please log in before creating a new session." disabled>Create Session <i class="fa fa-plus" aria-hidden="true"></i></button>
             </div>
         {% endif %}
     </div>

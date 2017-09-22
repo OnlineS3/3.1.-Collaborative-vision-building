@@ -37,6 +37,8 @@ def access(request):
 def related(request):
 	return render(request, 'cvbapp/related_documents.html')
 
+def demo(request):
+	return render(request, 'cvbapp/demo.html')
 
 def login_view(request):
 	request.session['cvbapp_profile'] = json.loads( '{"email": "' + request.POST['username'] + '", "nickname": "' + request.POST['username'] + '"}')

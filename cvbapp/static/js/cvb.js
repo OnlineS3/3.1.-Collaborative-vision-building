@@ -1,14 +1,80 @@
+
+
 $( document ).ready(function() {
-    if(document.getElementById("visionsession_list"))
+	var auth = new auth0.WebAuth({
+		domain: 'onlines3.eu.auth0.com',
+		clientID: 'dxWIFs8VoxLcqNkSbqVOCbPn3auoFzfa'
+	});
+
+	var tour = new Tour({
+		backdrop:"true",
+		onEnd: function (tour) {
+			if(document.getElementById("visionsession_list"))
+			{
+				getSessions();
+			}
+		},
+		steps: [
+			{
+				element: "#userbtns",
+				title: "Sign in",
+				content: "Sign in or Sign up to gain full access to the app",
+			},
+			{
+				element: "#searchdiv",
+				title: "Search bar",
+				content: "Use the search to search for and filter vision sessions"
+			},
+			{
+				element: "#createbtn",
+				title: "Create Button",
+				content: "Use the create button to create new vision sessions"
+			},
+			{
+				element: "#button_div",
+				title: "Access Button",
+				content: "Use this button to access a vision session"
+			},
+			{
+				element: "#phase_1",
+				title: "Session Info",
+				content: "This section provides some information about the session",
+				path: "/cvbapp/demo"
+			},
+			{
+				element: "#phase2",
+				title: "Step 2",
+				content: "In this step the initial Vision Statements are suggested",
+			},
+			{
+				element: "#phase3",
+				title: "Step 3",
+				content: "In this step the owner of the Session will use the suggested statements to create a single draft statement",
+			},
+			{
+				element: "#phase4",
+				title: "Step 4",
+				content: "In this step a live chat is organized and held, in order to discuss any changes that should be made to the vision statement",
+			},
+			{
+				element: "#phase5",
+				title: "Step 5",
+				content: "In this step the owner of the session will create a final vision statement and create a short report on their decisions",
+			},
+			{
+				element: "#phase6",
+				title: "Step 6",
+				content: "This step shows the final results of the Vision Building process and provides a summary report as a PDF",
+			}
+		]
+	});
+	tour.init();
+	tour.start();
+
+	if(tour.ended() && document.getElementById("visionsession_list"))
 	{
 		getSessions();
-    }
-
-    var auth = new auth0.WebAuth({
-    domain: 'onlines3.eu.auth0.com',
-    clientID: 'dxWIFs8VoxLcqNkSbqVOCbPn3auoFzfa'
-   });
-
+	}
 
     $('.login-btn').click(function(e) {
     	console.log("testing");
