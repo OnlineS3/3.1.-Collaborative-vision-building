@@ -66,7 +66,7 @@ def create_visionsession(request):
 		visionsession_instance.save()
 		return redirect('cvbapp_index')
 	else:
-		return HttpResponse('a session with that name already exists', status="409")
+		return HttpResponse('a session with that name already exists', status=409)
 
 
 def delete_vision_session(request):
