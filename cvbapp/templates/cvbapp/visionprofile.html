@@ -32,7 +32,7 @@
                         <button class="back_button cvb_button" onclick="document.getElementById('back_to_main').submit()"><i class="fa fa-chevron-left fa-2x" aria-hidden="true"></i></button>
                     </div>
                     <h1 class="div_title" style="width:600px; display:inline-block;"> {{ session_name }} (Step: {{ phase }})</h1>
-                    {% if request.session.cvbapp_profile.nickname == user_email %}
+                    {% if request.session.cvbapp_profile.email == user_email %}
                         <div id="owner_dropdown" class="dropdown" style="float:right">
                             <button onclick="dropdown('myDropdown')" class="dropbtn cvb_button"><i class="fa fa-chevron-down" aria-hidden="true"></i>
     </button>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="phase_content">
                     <div id="statement_submitted" style="{% if submitted_statement_p2 == "" %}display:none;{% endif %}">
-                        <p><b>Submitted: </b>{{ submitted_statement_p2 }}</p>
+                        <p id="submitted_statement_p"><b>Submitted: </b>{{ submitted_statement_p2 }}</p>
                         <button class="cvb_button" id="edit_statement" onclick="editStatement('2')" action="{% url 'cvbapp_getstatement' %}">Edit Statement</button>
                     </div>
                     <p>Please submit your suggested vision statement for this session.</p>
@@ -89,7 +89,7 @@
                     <h1 class="div_title">Step 3</h1>
                 </div>
                 <div class="phase_content">
-                    {% if request.session.cvbapp_profile.nickname == user_email %}
+                    {% if request.session.cvbapp_profile.email == user_email %}
                         <p>Step 2 has ended. Please review the submitted vision statements and submit a draft vision statement. Once this is complete, it will be possible to proceed to phase 4.</p>
                         <div id="statement_form" style="{% if submitted_statement_p3 != "" %}display:none;{% endif %}">
                             <form id="create_statement" method="post" action="{% url 'cvbapp_createstatement' %}">
@@ -101,7 +101,7 @@
                             <button style="margin-top:5px;" class="cvb_button" onclick="createStatement()">Submit Statement</button>
                         </div>
                         <div id="statement_submitted" style="{% if submitted_statement_p3 == "" %}display:none;{% endif %}">
-                            <p><b>Submitted: </b>{{ submitted_statement_p3 }}</p>
+                            <p id="submitted_statement_p"><b>Submitted: </b>{{ submitted_statement_p3 }}</p>
                             <button class="cvb_button" id="edit_statement" onclick="editStatement('3')" action="{% url 'cvbapp_getstatement' %}">Edit Statement</button>
                         </div>
                     {% else %}
@@ -132,7 +132,7 @@
                     <h1 class="div_title">Step 4</h1>
                 </div>
                 <div class="phase_content">
-                    {% if request.session.cvbapp_profile.nickname == user_email %}
+                    {% if request.session.cvbapp_profile.email == user_email %}
                         {% if submitted_meeting_p4 == "" %}
                             <div id="form_div">
                                 <p>Please schedule a time for the Vision Statement Draft review.</p>
@@ -221,7 +221,7 @@
                         {% endif %}
                     {% endif %}
 
-                    <p><b>Rocket Chat Link:</b> <a id="channel_link" target="_blank" href="{{ rc_channel }}">{{ rc_channel }}</a></p>
+                    <p><b>Rocket Chat Link:</b></br> <a id="channel_link" target="_blank" href="{{ rc_channel }}">{{ rc_channel }}</a></p>
                     <p id="usercount"><b>User Count: </b></p>
                 </div>
             {% endif %}
@@ -242,7 +242,7 @@
                     <h1 class="div_title">Step 5</h1>
                 </div>
                 <div class="phase_content">
-                    {% if request.session.cvbapp_profile.nickname == user_email %}
+                    {% if request.session.cvbapp_profile.email == user_email %}
                         <p>Step 4 has been completed. Using the discussion from Step 4, finalize a vision statement and
                             produce a report detailing the decisions made.</p>
                         <div id="statement_form" style="{% if submitted_statement_p5 != "" %}display:none;{% endif %}">
@@ -318,7 +318,7 @@
 		</div>
         <form id="back_to_main" method="get" action="{% url 'cvbapp_index' %}">
         </form>
-        {% if request.session.cvbapp_profile.nickname == user_email %}
+        {% if request.session.cvbapp_profile.email == user_email %}
             <form id="edit_vision_form" method="get" action="{% url 'cvbapp_editvisionprofile' %}">
                 <input type="hidden" name="session_name" value="{{ session_name }}">
             </form>

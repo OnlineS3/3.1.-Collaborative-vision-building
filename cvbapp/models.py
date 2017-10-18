@@ -14,6 +14,7 @@ class VisionSession(models.Model):
     session_description = models.CharField(max_length=512)
     phase = models.IntegerField()
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
+    region = models.CharField(max_length=128)
 
     class Meta:
         app_label = 'cvbapp'

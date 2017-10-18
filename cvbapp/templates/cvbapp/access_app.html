@@ -16,6 +16,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.11.0/js/bootstrap-tour.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tour/0.11.0/css/bootstrap-tour.min.css" />
 
+<!-- Select2 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
+
+<!-- Auth0 -->
 <script src="https://cdn.auth0.com/js/auth0/8.7/auth0.min.js"></script>
 
 <script type="text/javascript" src="{% static 'js/roadmap.js' %}"></script>
@@ -37,7 +42,195 @@
         <h1>Collaborative Vision Building</h1>
 
         <div id="searchdiv" style="border: 1px solid #0099CC; height:30px">
-            <input style="border:none;height:28px;float:left;width:543px;font-size:15px;" id="searchterm" type="text" name="searchterm" placeholder="Search term...">
+            <div id="searchterm_div">
+                <input style="border:none;height:28px;float:left;width:543px;font-size:15px;" id="searchterm" type="text" name="searchterm" placeholder="Search term...">
+            </div>
+            <div id="searchselect_div" style="display:none;float:left;">
+                <select class="js-example-basic-single" name="searchselect" id="region_input_search" style="width:543px;float:left;clear:left;border:1px solid #0099CC;">
+                    <optgroup label="BELGIQUE-BELGIË">
+                        <option value="RÉGION DE BRUXELLES-CAPITALE / BRUSSELS HOOFDSTEDELIJK GEWEST">RÉGION DE BRUXELLES-CAPITALE / BRUSSELS HOOFDSTEDELIJK GEWEST</option>
+                        <option value="VLAAMS GEWEST">VLAAMS GEWEST</option>
+                        <option value="RÉGION WALLONNE">RÉGION WALLONNE</option>
+                    </optgroup>
+
+                    <optgroup label="БЪЛГАРИЯ (BULGARIA)">
+                        <option value="СЕВЕРНА И ЮГОИЗТОЧНА БЪЛГАРИЯ (SEVERNA I YUGOIZTOCHNA BULGARIA)">СЕВЕРНА И ЮГОИЗТОЧНА БЪЛГАРИЯ (SEVERNA I YUGOIZTOCHNA BULGARIA)</option>
+                        <option value="ЮГОЗАПАДНА И ЮЖНА ЦЕНТРАЛНА БЪЛГАРИЯ (YUGOZAPADNA I YUZHNA TSENTRALNA BULGARIA)">ЮГОЗАПАДНА И ЮЖНА ЦЕНТРАЛНА БЪЛГАРИЯ (YUGOZAPADNA I YUZHNA TSENTRALNA BULGARIA)</option>
+                    </optgroup>
+
+                    <optgroup label="ČESKÁ REPUBLIKA">
+                        <option value="ČESKÁ REPUBLIKA">ČESKÁ REPUBLIKA</option>
+                    </optgroup>
+
+                    <optgroup label="DANMARK">
+                        <option value="DANMARK">DANMARK</option>
+                    </optgroup>
+
+                    <optgroup label="DEUTSCHLAND">
+                        <option value="BADEN-WÜRTTEMBERG">BADEN-WÜRTTEMBERG</option>
+                        <option value="BAYERN">BAYERN</option>
+                        <option value="BERLIN">BERLIN</option>
+                        <option value="BRANDENBURG">BRANDENBURG</option>
+                        <option value="BREMEN">BREMEN</option>
+                        <option value="HAMBURG">HAMBURG</option>
+                        <option value="HESSEN">HESSEN</option>
+                        <option value="MECKLENBURG-VORPOMMERN">MECKLENBURG-VORPOMMERN</option>
+                        <option value="NIEDERSACHSEN">NIEDERSACHSEN</option>
+                        <option value="NORDRHEIN-WESTFALEN">NORDRHEIN-WESTFALEN</option>
+                        <option value="RHEINLAND-PFALZ">RHEINLAND-PFALZ</option>
+                        <option value="SAARLAND">SAARLAND</option>
+                        <option value="SACHSEN">SACHSEN</option>
+                        <option value="SACHSEN-ANHALT">SACHSEN-ANHALT</option>
+                        <option value="SCHLESWIG-HOLSTEIN">SCHLESWIG-HOLSTEIN</option>
+                        <option value="THÜRINGEN">THÜRINGEN</option>
+                    </optgroup>
+
+                    <optgroup label="EESTI">
+                        <option value="EESTI">EESTI</option>
+                    </optgroup>
+
+                    <optgroup label="IRELAND">
+                        <option value="IRELAND">IRELAND</option>
+                    </optgroup>
+
+                    <optgroup label="ΕΛΛΑΔΑ (ELLADA)">
+                        <option value="ATTIKΗ (ATTIKI)">ATTIKΗ (ATTIKI)</option>
+                        <option value="NΗΣΙΑ ΑΙΓΑΙΟΥ, KΡΗΤΗ (NISIA AIGAIOU, KRITI)">NΗΣΙΑ ΑΙΓΑΙΟΥ, KΡΗΤΗ (NISIA AIGAIOU, KRITI)</option>
+                        <option value="ΒΟΡΕΙΑ ΕΛΛΑΔΑ (VOREIA ELLADA)">ΒΟΡΕΙΑ ΕΛΛΑΔΑ (VOREIA ELLADA)</option>
+                        <option value="ΚΕΝΤΡΙΚΗ ΕΛΛΑΔΑ (KENTRIKI ELLADA)">ΚΕΝΤΡΙΚΗ ΕΛΛΑΔΑ (KENTRIKI ELLADA)</option>
+                    </optgroup>
+
+                    <optgroup label="ESPAÑA">
+                        <option value="NOROESTE">NOROESTE</option>
+                        <option value="NORESTE">NORESTE</option>
+                        <option value="COMUNIDAD DE MADRID">COMUNIDAD DE MADRID</option>
+                        <option value="CENTRO (ES)">CENTRO (ES)</option>
+                        <option value="ESTE">ESTE</option>
+                        <option value="SUR">SUR</option>
+                        <option value="CANARIAS">CANARIAS</option>
+                    </optgroup>
+
+                    <optgroup label="FRANCE">
+                        <option value="ÎLE DE FRANCE">ÎLE DE FRANCE</option>
+                        <option value="BASSIN PARISIEN">BASSIN PARISIEN</option>
+                        <option value="NORD - PAS-DE-CALAIS">NORD - PAS-DE-CALAIS</option>
+                        <option value="EST">EST</option>
+                        <option value="OUEST">OUEST</option>
+                        <option value="SUD-OUEST">SUD-OUEST</option>
+                        <option value="CENTRE-EST">CENTRE-EST</option>
+                        <option value="MÉDITERRANÉE">MÉDITERRANÉE</option>
+                        <option value="DÉPARTEMENTS D'OUTRE-MER">DÉPARTEMENTS D'OUTRE-MER</option>
+                    </optgroup>
+
+                    <optgroup label="HRVATSKA">
+                        <option value="HRVATSKA">HRVATSKA</option>
+                    </optgroup>
+
+                    <optgroup label="ITALIA">
+                        <option value="NORD-OVEST">NORD-OVEST</option>
+                        <option value="SUD">SUD</option>
+                        <option value="ISOLE">ISOLE</option>
+                        <option value="NORD-EST">NORD-EST</option>
+                        <option value="CENTRO (IT)">CENTRO (IT)</option>
+                    </optgroup>
+
+                    <optgroup label="ΚΥΠΡΟΣ (KYPROS)">
+                        <option value="ΚΥΠΡΟΣ (Kypros)">ΚΥΠΡΟΣ (Kypros)</option>
+                    </optgroup>
+
+                    <optgroup label="LATVIJA">
+                        <option value="LATVIJA">LATVIJA</option>
+                    </optgroup>
+
+                    <optgroup label="LIETUVA">
+                        <option value="LIETUVA">LIETUVA</option>
+                    </optgroup>
+
+                    <optgroup label="LUXEMBOURG">
+                        <option value="LUXEMBOURG">LUXEMBOURG</option>
+                    </optgroup>
+
+                    <optgroup label="MAGYARORSZÁG">
+                        <option value="KÖZÉP-MAGYARORSZÁG">KÖZÉP-MAGYARORSZÁG</option>
+                        <option value="DUNÁNTÚL">DUNÁNTÚL</option>
+                        <option value="ALFÖLD ÉS ÉSZAK">ALFÖLD ÉS ÉSZAK</option>
+                    </optgroup>
+
+                    <optgroup label="MALTA">
+                        <option value="MALTA">MALTA</option>
+                    </optgroup>
+
+                    <optgroup label="NEDERLAND">
+                        <option value="NOORD-NEDERLAND">NOORD-NEDERLAND</option>
+                        <option value="OOST-NEDERLAND">OOST-NEDERLAND</option>
+                        <option value="WEST-NEDERLAND">WEST-NEDERLAND</option>
+                        <option value="ZUID-NEDERLAND">ZUID-NEDERLAND</option>
+                    </optgroup>
+
+                    <optgroup label="ÖSTERREICH">
+                        <option value="OSTÖSTERREICH">OSTÖSTERREICH</option>
+                        <option value="SÜDÖSTERREICH">SÜDÖSTERREICH</option>
+                        <option value="WESTÖSTERREICH">WESTÖSTERREICH</option>
+                    </optgroup>
+
+                    <optgroup label="POLSKA">
+                        <option value="REGION CENTRALNY">REGION CENTRALNY</option>
+                        <option value="REGION POŁUDNIOWY">REGION POŁUDNIOWY</option>
+                        <option value="REGION WSCHODNI">REGION WSCHODNI</option>
+                        <option value="REGION PÓŁNOCNO-ZACHODNI">REGION PÓŁNOCNO-ZACHODNI</option>
+                        <option value="REGION POŁUDNIOWO-ZACHODNI">REGION POŁUDNIOWO-ZACHODNI</option>
+                        <option value="REGION PÓŁNOCNY">REGION PÓŁNOCNY</option>
+                    </optgroup>
+
+                    <optgroup label="PORTUGAL">
+                        <option value="CONTINENTE">CONTINENTE</option>
+                        <option value="REGIÃO AUTÓNOMA DOS AÇORES">REGIÃO AUTÓNOMA DOS AÇORES</option>
+                        <option value="REGIÃO AUTÓNOMA DA MADEIRA">REGIÃO AUTÓNOMA DA MADEIRA</option>
+                    </optgroup>
+
+                    <optgroup label="ROMÂNIA">
+                        <option value="MACROREGIUNEA UNU">MACROREGIUNEA UNU</option>
+                        <option value="MACROREGIUNEA DOI">MACROREGIUNEA DOI</option>
+                        <option value="MACROREGIUNEA TREI">MACROREGIUNEA TREI</option>
+                        <option value="MACROREGIUNEA PATRU">MACROREGIUNEA PATRU</option>
+                    </optgroup>
+
+                    <optgroup label="SLOVENIJA">
+                        <option value="SLOVENIJA">SLOVENIJA</option>
+                    </optgroup>
+
+                    <optgroup label="SLOVENSKO">
+                        <option value="SLOVENSKO">SLOVENSKO</option>
+                    </optgroup>
+
+                    <optgroup label="SUOMI / FINLAND">
+                        <option value="MANNER-SUOMI">MANNER-SUOMI</option>
+                        <option value="ÅLAND">ÅLAND</option>
+                    </optgroup>
+
+                    <optgroup label="SVERIGE">
+                        <option value="ÖSTRA SVERIGE">ÖSTRA SVERIGE</option>
+                        <option value="SÖDRA SVERIGE">SÖDRA SVERIGE</option>
+                        <option value="NORRA SVERIGE">NORRA SVERIGE</option>
+                    </optgroup>
+
+                    <optgroup label="UNITED KINGDOM">
+                        <option value="NORTH EAST (ENGLAND)">NORTH EAST (ENGLAND)</option>
+                        <option value="NORTH WEST (ENGLAND)">NORTH WEST (ENGLAND)</option>
+                        <option value="YORKSHIRE AND THE HUMBER">YORKSHIRE AND THE HUMBER</option>
+                        <option value="EAST MIDLANDS (ENGLAND)">EAST MIDLANDS (ENGLAND)</option>
+                        <option value="WEST MIDLANDS (ENGLAND)">WEST MIDLANDS (ENGLAND)</option>
+                        <option value="EAST OF ENGLAND">EAST OF ENGLAND</option>
+                        <option value="LONDON">LONDON</option>
+                        <option value="SOUTH EAST (ENGLAND)">SOUTH EAST (ENGLAND)</option>
+                        <option value="SOUTH WEST (ENGLAND)">SOUTH WEST (ENGLAND)</option>
+                        <option value="WALES">WALES</option>
+                        <option value="SCOTLAND">SCOTLAND</option>
+                        <option value="NORTHERN IRELAND">NORTHERN IRELAND</option>
+                    </optgroup>
+                </select>
+            </div>
+
             <div class="dropdown" style="height:28px;background-color:#1AB3E6;float:left;">
                 <div id="dropdown_selection" style="padding-top:5px;float:left;height:28px;text-align:center;width:100px;font-size:15px;color:white;font-family: verdana,sans-serif">All</div>
                 <button style="float:left;width:50px; height:28px;padding:0px;" onclick="dropdown('myDropdown')" class="dropbtn cvb_button"><i class="fa fa-chevron-down" aria-hidden="true"></i></button>
@@ -45,6 +238,7 @@
                     <a href="#" onclick="searchSelection(this.innerHTML)">All</a>
                     <a href="#" onclick="searchSelection(this.innerHTML)">Name</a>
                     <a href="#" onclick="searchSelection(this.innerHTML)">Description</a>
+                    <a href="#" onclick="searchSelection(this.innerHTML)">Region</a>
                 </div>
             </div>
             <div >
@@ -77,7 +271,7 @@
                 </li>
             </ul>
 
-            {% if not request.session.cvbapp_profile.nickname %}
+            {% if not request.session.cvbapp_profile.email %}
                 <style>
                     .to_session_button, .to_session_div{
                         display:none;
@@ -87,13 +281,199 @@
 
         </div>
 
-        {% if request.session.cvbapp_profile.nickname %}
+        {% if request.session.cvbapp_profile.email %}
             <div style="float:right;width:470px;">
                 <button id="createbtn" class="cvb_button" onclick="dropdown('create_dropdown')" style="margin-bottom:66px;float:right;height:30px;font-size:15px;text-align:center;">Create Session <i class="fa fa-plus" aria-hidden="true"></i></button>
                 <div id="create_dropdown" class="dropdown-content" style="width:470px;margin-top:30px;border:1px solid #0099CC;position:absolute;float:right;padding:5px;">
                     <div id="vision_create_div" style="font-size: 13px;font-family: verdana,sans-serif">
                         <label style="float:left;clear:left;"><b>Name:</b></label>
                         <input style="width:458px;float:left;clear:left;border:1px solid #0099CC" id="session_name_input" type="text" name="session_name" placeholder="Name...">
+
+                        <label style="float:left;clear:left;"><b>Region:</b></label>
+                        <select class="js-example-basic-single" id="region_input" style="width:458px;float:left;clear:left;border:1px solid #0099CC">
+                            <optgroup label="BELGIQUE-BELGIË">
+                                <option value="RÉGION DE BRUXELLES-CAPITALE / BRUSSELS HOOFDSTEDELIJK GEWEST">RÉGION DE BRUXELLES-CAPITALE / BRUSSELS HOOFDSTEDELIJK GEWEST</option>
+                                <option value="VLAAMS GEWEST">VLAAMS GEWEST</option>
+                                <option value="RÉGION WALLONNE">RÉGION WALLONNE</option>
+                            </optgroup>
+
+                            <optgroup label="БЪЛГАРИЯ (BULGARIA)">
+                                <option value="СЕВЕРНА И ЮГОИЗТОЧНА БЪЛГАРИЯ (SEVERNA I YUGOIZTOCHNA BULGARIA)">СЕВЕРНА И ЮГОИЗТОЧНА БЪЛГАРИЯ (SEVERNA I YUGOIZTOCHNA BULGARIA)</option>
+                                <option value="ЮГОЗАПАДНА И ЮЖНА ЦЕНТРАЛНА БЪЛГАРИЯ (YUGOZAPADNA I YUZHNA TSENTRALNA BULGARIA)">ЮГОЗАПАДНА И ЮЖНА ЦЕНТРАЛНА БЪЛГАРИЯ (YUGOZAPADNA I YUZHNA TSENTRALNA BULGARIA)</option>
+                            </optgroup>
+                            
+                            <optgroup label="ČESKÁ REPUBLIKA">
+                                <option value="ČESKÁ REPUBLIKA">ČESKÁ REPUBLIKA</option>
+                            </optgroup>
+                            
+                            <optgroup label="DANMARK">
+                                <option value="DANMARK">DANMARK</option>
+                            </optgroup>
+                            
+                            <optgroup label="DEUTSCHLAND">
+                                <option value="BADEN-WÜRTTEMBERG">BADEN-WÜRTTEMBERG</option>
+                                <option value="BAYERN">BAYERN</option>
+                                <option value="BERLIN">BERLIN</option>
+                                <option value="BRANDENBURG">BRANDENBURG</option>
+                                <option value="BREMEN">BREMEN</option>
+                                <option value="HAMBURG">HAMBURG</option>
+                                <option value="HESSEN">HESSEN</option>
+                                <option value="MECKLENBURG-VORPOMMERN">MECKLENBURG-VORPOMMERN</option>
+                                <option value="NIEDERSACHSEN">NIEDERSACHSEN</option>
+                                <option value="NORDRHEIN-WESTFALEN">NORDRHEIN-WESTFALEN</option>
+                                <option value="RHEINLAND-PFALZ">RHEINLAND-PFALZ</option>
+                                <option value="SAARLAND">SAARLAND</option>
+                                <option value="SACHSEN">SACHSEN</option>
+                                <option value="SACHSEN-ANHALT">SACHSEN-ANHALT</option>
+                                <option value="SCHLESWIG-HOLSTEIN">SCHLESWIG-HOLSTEIN</option>
+                                <option value="THÜRINGEN">THÜRINGEN</option>
+                            </optgroup>
+                            
+                            <optgroup label="EESTI">
+                                <option value="EESTI">EESTI</option>
+                            </optgroup>
+                            
+                            <optgroup label="IRELAND">
+                                <option value="IRELAND">IRELAND</option>
+                            </optgroup>
+                            
+                            <optgroup label="ΕΛΛΑΔΑ (ELLADA)">
+                                <option value="ATTIKΗ (ATTIKI)">ATTIKΗ (ATTIKI)</option>
+                                <option value="NΗΣΙΑ ΑΙΓΑΙΟΥ, KΡΗΤΗ (NISIA AIGAIOU, KRITI)">NΗΣΙΑ ΑΙΓΑΙΟΥ, KΡΗΤΗ (NISIA AIGAIOU, KRITI)</option>
+                                <option value="ΒΟΡΕΙΑ ΕΛΛΑΔΑ (VOREIA ELLADA)">ΒΟΡΕΙΑ ΕΛΛΑΔΑ (VOREIA ELLADA)</option>
+                                <option value="ΚΕΝΤΡΙΚΗ ΕΛΛΑΔΑ (KENTRIKI ELLADA)">ΚΕΝΤΡΙΚΗ ΕΛΛΑΔΑ (KENTRIKI ELLADA)</option>
+                            </optgroup>
+                            
+                            <optgroup label="ESPAÑA">
+                                <option value="NOROESTE">NOROESTE</option>
+                                <option value="NORESTE">NORESTE</option>
+                                <option value="COMUNIDAD DE MADRID">COMUNIDAD DE MADRID</option>
+                                <option value="CENTRO (ES)">CENTRO (ES)</option>
+                                <option value="ESTE">ESTE</option>
+                                <option value="SUR">SUR</option>
+                                <option value="CANARIAS">CANARIAS</option>
+                            </optgroup>
+                            
+                            <optgroup label="FRANCE">
+                                <option value="ÎLE DE FRANCE">ÎLE DE FRANCE</option>
+                                <option value="BASSIN PARISIEN">BASSIN PARISIEN</option>
+                                <option value="NORD - PAS-DE-CALAIS">NORD - PAS-DE-CALAIS</option>
+                                <option value="EST">EST</option>
+                                <option value="OUEST">OUEST</option>
+                                <option value="SUD-OUEST">SUD-OUEST</option>
+                                <option value="CENTRE-EST">CENTRE-EST</option>
+                                <option value="MÉDITERRANÉE">MÉDITERRANÉE</option>
+                                <option value="DÉPARTEMENTS D'OUTRE-MER">DÉPARTEMENTS D'OUTRE-MER</option>
+                            </optgroup>
+                            
+                            <optgroup label="HRVATSKA">
+                                <option value="HRVATSKA">HRVATSKA</option>
+                            </optgroup>
+                            
+                            <optgroup label="ITALIA">
+                                <option value="NORD-OVEST">NORD-OVEST</option>
+                                <option value="SUD">SUD</option>
+                                <option value="ISOLE">ISOLE</option>
+                                <option value="NORD-EST">NORD-EST</option>
+                                <option value="CENTRO (IT)">CENTRO (IT)</option>
+                            </optgroup>
+                            
+                            <optgroup label="ΚΥΠΡΟΣ (KYPROS)">
+                                <option value="ΚΥΠΡΟΣ (Kypros)">ΚΥΠΡΟΣ (Kypros)</option>
+                            </optgroup>
+                            
+                            <optgroup label="LATVIJA">
+                                <option value="LATVIJA">LATVIJA</option>
+                            </optgroup>
+                            
+                            <optgroup label="LIETUVA">
+                                <option value="LIETUVA">LIETUVA</option>
+                            </optgroup>
+                            
+                            <optgroup label="LUXEMBOURG">
+                                <option value="LUXEMBOURG">LUXEMBOURG</option>
+                            </optgroup>
+                            
+                            <optgroup label="MAGYARORSZÁG">
+                                <option value="KÖZÉP-MAGYARORSZÁG">KÖZÉP-MAGYARORSZÁG</option>
+                                <option value="DUNÁNTÚL">DUNÁNTÚL</option>
+                                <option value="ALFÖLD ÉS ÉSZAK">ALFÖLD ÉS ÉSZAK</option>
+                            </optgroup>
+                            
+                            <optgroup label="MALTA">
+                                <option value="MALTA">MALTA</option>
+                            </optgroup>
+                            
+                            <optgroup label="NEDERLAND">
+                                <option value="NOORD-NEDERLAND">NOORD-NEDERLAND</option>
+                                <option value="OOST-NEDERLAND">OOST-NEDERLAND</option>
+                                <option value="WEST-NEDERLAND">WEST-NEDERLAND</option>
+                                <option value="ZUID-NEDERLAND">ZUID-NEDERLAND</option>
+                            </optgroup>
+                            
+                            <optgroup label="ÖSTERREICH">
+                                <option value="OSTÖSTERREICH">OSTÖSTERREICH</option>
+                                <option value="SÜDÖSTERREICH">SÜDÖSTERREICH</option>
+                                <option value="WESTÖSTERREICH">WESTÖSTERREICH</option>
+                            </optgroup>
+                            
+                            <optgroup label="POLSKA">
+                                <option value="REGION CENTRALNY">REGION CENTRALNY</option>
+                                <option value="REGION POŁUDNIOWY">REGION POŁUDNIOWY</option>
+                                <option value="REGION WSCHODNI">REGION WSCHODNI</option>
+                                <option value="REGION PÓŁNOCNO-ZACHODNI">REGION PÓŁNOCNO-ZACHODNI</option>
+                                <option value="REGION POŁUDNIOWO-ZACHODNI">REGION POŁUDNIOWO-ZACHODNI</option>
+                                <option value="REGION PÓŁNOCNY">REGION PÓŁNOCNY</option>
+                            </optgroup>
+                            
+                            <optgroup label="PORTUGAL">
+                                <option value="CONTINENTE">CONTINENTE</option>
+                                <option value="REGIÃO AUTÓNOMA DOS AÇORES">REGIÃO AUTÓNOMA DOS AÇORES</option>
+                                <option value="REGIÃO AUTÓNOMA DA MADEIRA">REGIÃO AUTÓNOMA DA MADEIRA</option>
+                            </optgroup>
+                            
+                            <optgroup label="ROMÂNIA">
+                                <option value="MACROREGIUNEA UNU">MACROREGIUNEA UNU</option>
+                                <option value="MACROREGIUNEA DOI">MACROREGIUNEA DOI</option>
+                                <option value="MACROREGIUNEA TREI">MACROREGIUNEA TREI</option>
+                                <option value="MACROREGIUNEA PATRU">MACROREGIUNEA PATRU</option>
+                            </optgroup>
+                            
+                            <optgroup label="SLOVENIJA">
+                                <option value="SLOVENIJA">SLOVENIJA</option>
+                            </optgroup>
+                            
+                            <optgroup label="SLOVENSKO">
+                                <option value="SLOVENSKO">SLOVENSKO</option>
+                            </optgroup>
+                            
+                            <optgroup label="SUOMI / FINLAND">
+                                <option value="MANNER-SUOMI">MANNER-SUOMI</option>
+                                <option value="ÅLAND">ÅLAND</option>
+                            </optgroup>
+                            
+                            <optgroup label="SVERIGE">
+                                <option value="ÖSTRA SVERIGE">ÖSTRA SVERIGE</option>
+                                <option value="SÖDRA SVERIGE">SÖDRA SVERIGE</option>
+                                <option value="NORRA SVERIGE">NORRA SVERIGE</option>
+                            </optgroup>
+                            
+                            <optgroup label="UNITED KINGDOM">
+                                <option value="NORTH EAST (ENGLAND)">NORTH EAST (ENGLAND)</option>
+                                <option value="NORTH WEST (ENGLAND)">NORTH WEST (ENGLAND)</option>
+                                <option value="YORKSHIRE AND THE HUMBER">YORKSHIRE AND THE HUMBER</option>
+                                <option value="EAST MIDLANDS (ENGLAND)">EAST MIDLANDS (ENGLAND)</option>
+                                <option value="WEST MIDLANDS (ENGLAND)">WEST MIDLANDS (ENGLAND)</option>
+                                <option value="EAST OF ENGLAND">EAST OF ENGLAND</option>
+                                <option value="LONDON">LONDON</option>
+                                <option value="SOUTH EAST (ENGLAND)">SOUTH EAST (ENGLAND)</option>
+                                <option value="SOUTH WEST (ENGLAND)">SOUTH WEST (ENGLAND)</option>
+                                <option value="WALES">WALES</option>
+                                <option value="SCOTLAND">SCOTLAND</option>
+                                <option value="NORTHERN IRELAND">NORTHERN IRELAND</option>
+                            </optgroup>
+                        </select>
+
                         <label style="float:left;clear:left;margin-top:10px;"><b>Description:</b></label><br>
 
                         <textarea name="session_description" rows="8" cols="60" id="session_description_input" style="margin-bottom:10px;float:left;clear:left;font-size: 13px;font-family: verdana,sans-serif;border:1px solid #0099CC;" placeholder="Description..."></textarea><br>
@@ -123,11 +503,6 @@
 <!-- Page Menus -->
     <div style="float: left; margin-left: 66px; margin-top: 61px">
         <!-- {% include "cvbapp/online_steps.html" %} -->
-        <aside id='sidebar'>
-            <a href="{% static 'data/Collab_Vision_Building_Guidline.pdf' %}" target="_blank">
-                <button class="alt"> Download Guide  <i class="fa fa-file-pdf-o" aria-hidden="true"></i></button>
-            </a>
-        </aside>
     </div>
 <!-- Page Menus -->
 {% endblock %}

@@ -62,7 +62,7 @@ def create_visionsession(request):
 
 		channel_instance = Channel.objects.create(room_id=j["channel"]["_id"], channel_name=j["channel"]["name"], rc_channel=rocketchat_url+'/channel/' + request.POST['session_name'].replace(" ", ""))
 
-		visionsession_instance = VisionSession.objects.create(user_email=request.session['cvbapp_profile']['email'],session_name=request.POST['session_name'],session_description=request.POST['session_description'],phase=2, channel=channel_instance)
+		visionsession_instance = VisionSession.objects.create(user_email=request.session['cvbapp_profile']['email'],session_name=request.POST['session_name'],session_description=request.POST['session_description'],phase=2, channel=channel_instance, region=request.POST['region'])
 		visionsession_instance.save()
 		return redirect('cvbapp_index')
 	else:
@@ -184,6 +184,15 @@ def search_sessions(request):
 			print vs.session_name
 	if request.GET['searchtype'] == "Description" or request.GET['searchtype'] == "All":
 		visionsessions = VisionSession.objects.filter(session_description__contains=searchterm)
+		for vs in visionsessions:
+			session = {}
+			session['user_email'] = vs.user_email
+			session['session_name'] = vs.session_name
+			session['session_description'] = vs.session_description
+			if not session in data['sessions']:
+				data['sessions'].append(session)
+	if request.GET['searchtype'] == "Region" or request.GET['searchtype'] == "All":
+		visionsessions = VisionSession.objects.filter(region__contains=searchterm)
 		for vs in visionsessions:
 			session = {}
 			session['user_email'] = vs.user_email

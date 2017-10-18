@@ -6,6 +6,32 @@ $( document ).ready(function() {
 		clientID: 'dxWIFs8VoxLcqNkSbqVOCbPn3auoFzfa'
 	});
 
+	$('.js-example-basic-single').select2();
+
+	$.ajaxSetup({
+		beforeSend: function(xhr, settings) {
+		 function getCookie(name) {
+			 var cookieValue = null;
+			 if (document.cookie && document.cookie != '') {
+				 var cookies = document.cookie.split(';');
+				 for (var i = 0; i < cookies.length; i++) {
+					 var cookie = jQuery.trim(cookies[i]);
+					 // Does this cookie string begin with the name we want?
+					 if (cookie.substring(0, name.length + 1) == (name + '=')) {
+						 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						 break;
+					 }
+				 }
+			 }
+			 return cookieValue;
+		 }
+		 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+			 // Only send the token to relative URLs i.e. locally.
+			 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+		 }
+		}
+	});
+
 	var tour = new Tour({
 		backdrop:"true",
 		onEnd: function (tour) {
@@ -98,30 +124,6 @@ $( document ).ready(function() {
     });
 });
 
-$.ajaxSetup({
-	 beforeSend: function(xhr, settings) {
-		 function getCookie(name) {
-			 var cookieValue = null;
-			 if (document.cookie && document.cookie != '') {
-				 var cookies = document.cookie.split(';');
-				 for (var i = 0; i < cookies.length; i++) {
-					 var cookie = jQuery.trim(cookies[i]);
-					 // Does this cookie string begin with the name we want?
-					 if (cookie.substring(0, name.length + 1) == (name + '=')) {
-						 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-						 break;
-					 }
-				 }
-			 }
-			 return cookieValue;
-		 }
-		 if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-			 // Only send the token to relative URLs i.e. locally.
-			 xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-		 }
-	 }
-});
-
 $(".form_datetime").datetimepicker({
 	format: "dd MM yyyy - hh:ii"
 });
@@ -132,7 +134,8 @@ function createSession()
 			type: "POST",
 			data: {
 				session_name: document.getElementById("session_name_input").value,
-                session_description: document.getElementById("session_description_input").value
+                session_description: document.getElementById("session_description_input").value,
+				region: $("#region_input").select2("val")
 			},
 			success: function(result){
 				console.log("success: " + result);
@@ -166,6 +169,10 @@ function getSessions()
 
 function searchSessions()
 {
+	if(document.getElementById("dropdown_selection").innerHTML == "Region")
+	{
+		document.getElementById("searchterm").value = $("#region_input_search").select2("val");
+	}
 	$.ajax({url: document.getElementById("searchform").getAttribute("action"),
 			type: "GET",
 			data: {
@@ -199,6 +206,7 @@ function createStatement()
 				document.getElementById('statement_submitted').style = 'display:block;';
 				document.getElementById('statement_form').style = 'display:none;';
 				console.log("success: " + result);
+				document.getElementById("submitted_statement_p").innerHTML = "<b>Submitted: </b>" + document.getElementById("vision_statement").value;
 			},
 			error: function(xhr, status, error){
 				console.log("xhr: " + xhr.responseText);
@@ -573,5 +581,16 @@ window.onclick = function(event) {
 function searchSelection(selection)
 {
 	document.getElementById("dropdown_selection").innerHTML = selection;
+
+	if(selection == "Region")
+	{
+		document.getElementById("searchselect_div").style.display = "inline";
+		document.getElementById("searchterm_div").style.display = "none";
+	}
+	else
+	{
+		document.getElementById("searchselect_div").style.display = "none";
+		document.getElementById("searchterm_div").style.display = "block";
+	}
 	document.getElementById("myDropdown").classList.toggle("show");
 }
