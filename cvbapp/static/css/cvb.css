@@ -104,7 +104,7 @@
 .dropdown-content a:hover {background-color: #f1f1f1}
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
-.show {display:block;}
+div .show {display:block;}
 
 #myDropdown a{
     font-size: 13px;

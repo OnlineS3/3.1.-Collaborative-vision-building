@@ -59,7 +59,7 @@
                         <p id="submitted_statement_p"><b>Submitted: </b>{{ submitted_statement_p2 }}</p>
                         <button class="cvb_button" id="edit_statement" onclick="editStatement('2')" action="{% url 'cvbapp_getstatement' %}">Edit Statement</button>
                     </div>
-                    <p>Please submit your suggested vision statement for this session.</p>
+                    <p>Please submit your suggested vision statement for this Collaborative Vision Building session.</p>
                     <div id="statement_form" style="{% if submitted_statement_p2 != "" %}display:none;{% endif %}">
                         <form id="create_statement" method="post" action="{% url 'cvbapp_createstatement' %}">
                             {% csrf_token %}
@@ -214,7 +214,7 @@
                         {% endif %}
                     {% else %}
                         {% if submitted_meeting_p4 == "" %}
-                            <p>The owner of this session is scheduling a time to hold the Vision Statement Draft review meeting.</p>
+                            <p>The owner of this Collaborative Vision Building session is scheduling a time to hold the Vision Statement Draft review meeting.</p>
                         {% else %}
                             <p>The meeting will be held at:</p>
                             <p><b>{{ submitted_meeting_p4 }}</b></p>
