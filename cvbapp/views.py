@@ -18,6 +18,7 @@ rocketchat_pass = "buffalobrotherbreakfastproduct"
 client_id = "dxWIFs8VoxLcqNkSbqVOCbPn3auoFzfa"
 client_secret = "IWtoIeh279Q6gG_nPtGV3pgc3gB_HPhtwT5pk6hrqCScv22Zv-AZd-GlE3hH6XpC"
 
+
 def index(request):
 	context = {}
 	if 'delete_success' in request.session:
@@ -132,6 +133,7 @@ def get_visionsessions(request):
 		session['user_email'] = vs.user_email
 		session['session_name'] = vs.session_name
 		session['session_description'] = vs.session_description
+		session['share_id'] = vs.share_id
 		data['sessions']['created'].append(session)
 
 	joinedvisionsessions = Shares.objects.filter(shared_with=request.session['cvbapp_profile']['email'])
@@ -140,6 +142,7 @@ def get_visionsessions(request):
 		session['user_email'] = sh.session.user_email
 		session['session_name'] = sh.session.session_name
 		session['session_description'] = sh.session.session_description
+		session['share_id'] = sh.session.share_id;
 		data['sessions']['joined'].append(session)
 
 	publicvisionsessions = VisionSession.objects.filter(private=False)
@@ -149,16 +152,17 @@ def get_visionsessions(request):
 			session['user_email'] = vs.user_email
 			session['session_name'] = vs.session_name
 			session['session_description'] = vs.session_description
+			session['share_id'] = vs.share_id
 			data['sessions']['public'].append(session)
 
 	j = json.dumps(data)
 	return HttpResponse(j)
 
 def get_vision_profile(request):
-	session_name = request.GET['session_name']
-	visionsession_instance = VisionSession.objects.get(session_name=session_name)
+	share_id = request.GET['share_id']
+	visionsession_instance = VisionSession.objects.get(share_id=share_id)
 
-	share_id = visionsession_instance.share_id
+	session_name = visionsession_instance.session_name
 
 	submitted_statement_p2 = ""
 	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'], session=visionsession_instance, phase=2).count() > 0:
@@ -181,7 +185,7 @@ def get_vision_profile(request):
 
 	submitted_meeting_p4 = ""
 	if ScheduledMeeting.objects.filter(channel = visionsession_instance.channel, phase=4).count() > 0:
-		submitted_meeting_p4 = ScheduledMeeting.objects.filter(channel = visionsession_instance[0].channel, phase=4)[0].datetime
+		submitted_meeting_p4 = ScheduledMeeting.objects.filter(channel = visionsession_instance.channel, phase=4)[0].datetime
 
 	submitted_report = ""
 	if VisionReport.objects.filter(session=visionsession_instance).count() > 0:
@@ -241,6 +245,7 @@ def search_sessions(request):
 			session['user_email'] = vs.user_email
 			session['session_name'] = vs.session_name
 			session['session_description'] = vs.session_description
+			session['share_id'] = vs.share_id
 
 			if (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']):
 				if vs.user_email == request.session['cvbapp_profile']['email']:
@@ -256,6 +261,7 @@ def search_sessions(request):
 			session['user_email'] = vs.user_email
 			session['session_name'] = vs.session_name
 			session['session_description'] = vs.session_description
+			session['share_id'] = vs.share_id
 			if (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']):
 				if vs.user_email == request.session['cvbapp_profile']['email']:
 					data['sessions']['created'].append(session)
@@ -270,6 +276,7 @@ def search_sessions(request):
 			session['user_email'] = vs.user_email
 			session['session_name'] = vs.session_name
 			session['session_description'] = vs.session_description
+			session['share_id'] = vs.share_id
 			if (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']):
 				if vs.user_email == request.session['cvbapp_profile']['email']:
 					data['sessions']['created'].append(session)

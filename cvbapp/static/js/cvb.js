@@ -440,8 +440,8 @@ function createSessionElement(s, json)
 		formobj.method = "get";
 		var hiddenInput = document.createElement("input");
 		hiddenInput.type = "hidden";
-		hiddenInput.name = "session_name";
-		hiddenInput.value = json.session_name;
+		hiddenInput.name = "share_id";
+		hiddenInput.value = json.share_id;
 		formobj.appendChild(hiddenInput);
 		var listobj = document.createElement("li");
 
