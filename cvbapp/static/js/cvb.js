@@ -26,6 +26,13 @@ $( document ).ready(function() {
       });
     });
 
+    // Close the dropdown menu if the user clicks outside of it
+    // window.onclick = function(event) {
+		// if (!event.target.matches('.dropbtn')) {
+		// 	$('.dropdown-content:visible').toggle();
+		// }
+    // }
+
 	$('.js-example-basic-single').select2();
 
 	$.ajaxSetup({
@@ -118,7 +125,7 @@ $( document ).ready(function() {
 	tour.init();
 	tour.start();
 
-	if(tour.ended() && document.getElementById("visionsession_list"))
+	if(tour.ended() && document.getElementById("created_visionsession_list"))
 	{
 		getSessions();
 	}
@@ -135,11 +142,35 @@ function createSession()
 			data: {
 				session_name: document.getElementById("session_name_input").value,
                 session_description: document.getElementById("session_description_input").value,
-				region: $("#region_input").select2("val")
+				region: $("#region_input").select2("val"),
+				private: document.getElementById('session_private').checked?'True':'False'
 			},
 			success: function(result){
 				console.log("success: " + result);
-				alert(document.getElementById("session_name_input").value + " created successfully.");
+				createModalNotification("Notification", document.getElementById("session_name_input").value + " created successfully.");
+				getSessions();
+			},
+			error: function(xhr, status, error){
+				console.log("xhr: " + xhr.responseText);
+				console.log("status: " + status);
+				console.log("error: " + error);
+			}
+	});
+	$('#session_private').attr('checked',false);
+	$('#session_name_input').val('');
+	$('#session_description_input').val('');
+}
+
+function joinSession()
+{
+	$.ajax({url: document.getElementById("share_id_button").getAttribute("action"),
+			type: "POST",
+			data: {
+				share_id: document.getElementById("share_id_input").value
+			},
+			success: function(result){
+				console.log("success: " + result);
+				createModalNotification("Notification", document.getElementById("session_name_input").value + " joined successfully.");
 				getSessions();
 			},
 			error: function(xhr, status, error){
@@ -152,7 +183,7 @@ function createSession()
 
 function getSessions()
 {
-	$.ajax({url: document.getElementById("visionsession_list").getAttribute("action"),
+	$.ajax({url: document.getElementById("created_visionsession_list").getAttribute("action"),
 			type: "GET",
 			success: function(result){
 				console.log("success: " + result);
@@ -225,7 +256,7 @@ function createReport()
 				report: document.getElementById("report_textarea").value
 			},
 			success: function(result){
-				alert("Report submitted successfully.")
+				createModalNotification("Notification", "Report submitted successfully.")
 				console.log("success: " + result);
 			},
 			error: function(xhr, status, error){
@@ -385,37 +416,44 @@ function loadChannelHistory(result, phase)
 
 function clearSessions()
 {
-	var visionsession_list = document.getElementById("visionsession_list");
+	var visionsession_list = document.getElementById("created_visionsession_list");
+	while(visionsession_list.hasChildNodes())
+	{
+		visionsession_list.removeChild(visionsession_list.lastChild);
+	}
+	visionsession_list = document.getElementById("joined_visionsession_list");
+	while(visionsession_list.hasChildNodes())
+	{
+		visionsession_list.removeChild(visionsession_list.lastChild);
+	}
+	visionsession_list = document.getElementById("public_visionsession_list");
 	while(visionsession_list.hasChildNodes())
 	{
 		visionsession_list.removeChild(visionsession_list.lastChild);
 	}
 }
 
-function loadSessions(result) {
-	result_json = JSON.parse(result)
-	for(s in result_json.sessions)
-	{
-		var formobj = document.createElement("form");
+function createSessionElement(s, json)
+{
+	var formobj = document.createElement("form");
 		formobj.action ="visionprofile";
 		formobj.method = "get";
 		var hiddenInput = document.createElement("input");
 		hiddenInput.type = "hidden";
 		hiddenInput.name = "session_name";
-		hiddenInput.value = result_json.sessions[s].session_name;
+		hiddenInput.value = json.session_name;
 		formobj.appendChild(hiddenInput);
 		var listobj = document.createElement("li");
-
 
 		var sessionDiv = document.createElement("div");
 		var textDiv = document.createElement("div");
 		textDiv.style = "float:left; margin:5px;";
 		var nameDiv = document.createElement("div");
 		nameDiv.style = "margin:5px";
-		nameDiv.innerHTML = "<b>" + result_json.sessions[s].session_name + "</b>"
+		nameDiv.innerHTML = "<b>" + json.session_name + "</b>"
 		var descDiv = document.createElement("div");
 		descDiv.style = "margin:5px";
-		descDiv.innerHTML = "<i>" + result_json.sessions[s].session_description + "</i>"
+		descDiv.innerHTML = "<i>" + json.session_description + "</i>"
 		var buttonDiv = document.createElement("div");
 		var button = document.createElement("button");
 		button.className = "to_session_button";
@@ -442,8 +480,52 @@ function loadSessions(result) {
 
 		listobj.appendChild(sessionDiv);
 		listobj.appendChild(formobj);
-		document.getElementById("visionsession_list").appendChild(listobj);
+		return listobj;
+}
+
+function loadSessions(result) {;
+	result_json = JSON.parse(result);
+	var created = result_json.sessions.created;
+	var joined = result_json.sessions.joined;
+	var public = result_json.sessions.public;
+	if(created.length == 0)
+	{
+		var p = document.createElement('p');
+		p.innerHTML = "You have not created any Collaborative Vision Building Sessions";
+		document.getElementById("created_visionsession_list").appendChild(p);
 	}
+	else {
+        for (s in created) {
+            listobj = createSessionElement(s, created[s]);
+            document.getElementById("created_visionsession_list").appendChild(listobj);
+        }
+    }
+
+    if(joined.length == 0)
+	{
+		var p = document.createElement('p');
+		p.innerHTML = "You have not joined any Collaborative Vision Building Sessions";
+		document.getElementById("joined_visionsession_list").appendChild(p);
+	}
+	else {
+        for (s in joined) {
+            listobj = createSessionElement(s, joined[s]);
+            document.getElementById("joined_visionsession_list").appendChild(listobj);
+        }
+    }
+
+    if(public.length == 0)
+	{
+		var p = document.createElement('p');
+		p.innerHTML = "There are no public Collaborative Vision Building Sessions";
+		document.getElementById("public_visionsession_list").appendChild(p);
+	}
+	else {
+        for (s in public) {
+            listobj = createSessionElement(s, public[s]);
+            document.getElementById("public_visionsession_list").appendChild(listobj);
+        }
+    }
 }
 
 function expand()
@@ -560,22 +642,8 @@ function exportPDF()
 }
 
 function dropdown(dropdown) {
-    document.getElementById(dropdown).classList.toggle("show");
-}
-
-// Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
+	$('.dropdown-content:not(#'+dropdown+'):visible').toggle();
+	$('#'+dropdown).toggle();
 }
 
 function searchSelection(selection)
@@ -592,5 +660,45 @@ function searchSelection(selection)
 		document.getElementById("searchselect_div").style.display = "none";
 		document.getElementById("searchterm_div").style.display = "block";
 	}
-	document.getElementById("myDropdown").classList.toggle("show");
+	dropdown("myDropdown");
+}
+
+function createModalNotification(header, content)
+{
+	var modal = document.createElement("div");
+	modal.className = "s3_modal";
+	modal.id = "notification_modal";
+
+	var headerDiv = document.createElement("div");
+	headerDiv.className = "modalheader";
+
+	var headerText = document.createElement("div");
+	headerText.style = "float:left";
+
+	var closeDiv = document.createElement("div");
+	closeDiv.style = "float:right";
+
+	var closeSpan = document.createElement("div");
+	closeSpan.className = "close";
+	closeSpan.innerHTML = "&times";
+	closeSpan.onclick = function(){
+		$("#notification_modal").remove();
+	};
+
+	var headerElem = document.createElement("p");
+	headerElem.innerHTML = header;
+
+	var contentElem = document.createElement("p");
+	contentElem.innerHTML = content;
+
+	modal.appendChild(headerDiv);
+	headerDiv.appendChild(headerText);
+	headerText.appendChild(headerElem);
+	headerDiv.appendChild(closeDiv);
+	closeDiv.appendChild(closeSpan);
+
+	modal.appendChild(contentElem);
+
+	document.body.appendChild(modal);
+	document.getElementById("notification_modal").style.display = "block";
 }

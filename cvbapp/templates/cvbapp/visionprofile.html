@@ -5,6 +5,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/appmenu.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/roadmap.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/cvb.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -41,6 +42,7 @@
                                 <a href="#" onclick="document.getElementById('advance_vision_form').submit()">Advance Vision</a>
                                 <a href="#" onclick="document.getElementById('decrease_vision_form').submit()">Decrease Vision</a>
                                 <a href="#" onclick="document.getElementById('delete_vision_form').submit()">Delete Vision</a>
+                                <a href="#" onclick="document.getElementById('share_modal').style.display = 'block';">Share</a>
                             </div>
                         </div>
                     {% endif %}
@@ -316,7 +318,7 @@
                 </div>
             {% endif %}
 		</div>
-        <form id="back_to_main" method="get" action="{% url 'cvbapp_index' %}">
+        <form id="back_to_main" method="get" action="{% url 'cvbapp_access' %}">
         </form>
         {% if request.session.cvbapp_profile.email == user_email %}
             <form id="edit_vision_form" method="get" action="{% url 'cvbapp_editvisionprofile' %}">
@@ -348,6 +350,21 @@
     <button id="get_statement" style="display:none;" action="{% url 'cvbapp_getstatement' %}"></button>
     <button id="get_history" style="display:none;" action="{% url 'cvbapp_getchannelhistory' %}" channel_link="{{ rc_channel }}"></button>
     <button id="session_name" style="display:none;" value="{{ session_name }}"></button>
+
+    <div id="share_modal" class="s3_modal" style="display: none;">
+        <div class="modalheader">
+            <div style="float:left";>
+                <p>Share ID</p>
+            </div>
+            <div style="float:right";>
+                <span class="close" onclick="document.getElementById('share_modal').style.display = 'none'">&times</span>
+            </div>
+        </div>
+
+        <div class="modalcontent">
+            <p>Use this unique Collaborative Vision Building Session Key to provide access to your Collaborative Vision Building Session:<br> <b>{{ share_id }}</b></p>
+        </div>
+    </div>
 <!-- CVBAPP Content END -->
 <!-- Page Menus -->
     <div style="float: left; margin-left: 66px; margin-top: 61px">

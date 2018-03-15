@@ -15,6 +15,8 @@ class VisionSession(models.Model):
     phase = models.IntegerField()
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     region = models.CharField(max_length=128)
+    share_id = models.CharField(max_length=40)
+    private = models.BooleanField(default=False)
 
     class Meta:
         app_label = 'cvbapp'
@@ -39,6 +41,13 @@ class ScheduledMeeting(models.Model):
     channel = models.ForeignKey(Channel, on_delete=models.CASCADE)
     datetime = models.CharField(max_length=16)
     phase = models.IntegerField()
+
+    class Meta:
+        app_label = 'cvbapp'
+
+class Shares(models.Model):
+    session = models.ForeignKey(VisionSession, on_delete=models.CASCADE)
+    shared_with = models.CharField(max_length=100)
 
     class Meta:
         app_label = 'cvbapp'

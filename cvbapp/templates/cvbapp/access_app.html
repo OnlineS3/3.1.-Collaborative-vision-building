@@ -4,6 +4,7 @@
 {% block addHead %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/appmenu.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'css/roadmap.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/modal.css' %}">
 
 <!-- jQuery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -252,8 +253,47 @@
             </form>
         </div>
 
-        <div>
-            <ul id="visionsession_list" action="{% url 'cvbapp_getsessions' %}" style="list-style: none; padding-left:0px;">
+        <div style="margin-top: 20px;">
+            <h3>My Collaborative Vision Building Sessions:</h3>
+            <ul id="created_visionsession_list" action="{% url 'cvbapp_getsessions' %}" style="list-style: none; padding-left:0px;margin-bottom:50px;">
+                <li style="border-bottom: 1px solid #0099CC; overflow:auto">
+                    <div>
+                        <div id="text_div" style="float:left;">
+                            <div id="name_div">
+                                <b>Name of Session</b>
+                            </div>
+                            <div id="desc_div">
+                                <i>Descripiton of Session</i>
+                            </div>
+                        </div>
+                        <div id="button_div" style="float:right;">
+                            <button class="back_button cvb_button"><i class="fa fa-chevron-right fa-2x" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <h3>Joined Collaborative Vision Building Sessions:</h3>
+            <ul id="joined_visionsession_list" action="{% url 'cvbapp_getsessions' %}" style="list-style: none; padding-left:0px;margin-bottom:50px;">
+                <li style="border-bottom: 1px solid #0099CC; overflow:auto">
+                    <div>
+                        <div id="text_div" style="float:left;">
+                            <div id="name_div">
+                                <b>Name of Session</b>
+                            </div>
+                            <div id="desc_div">
+                                <i>Descripiton of Session</i>
+                            </div>
+                        </div>
+                        <div id="button_div" style="float:right;">
+                            <button class="back_button cvb_button"><i class="fa fa-chevron-right fa-2x" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <h3>Public Collaborative Vision Building Sessions:</h3>
+            <ul id="public_visionsession_list" action="{% url 'cvbapp_getsessions' %}" style="list-style: none; padding-left:0px;">
                 <li style="border-bottom: 1px solid #0099CC; overflow:auto">
                     <div>
                         <div id="text_div" style="float:left;">
@@ -282,9 +322,19 @@
         </div>
 
         {% if request.session.cvbapp_profile.email %}
-            <div style="float:right;width:470px;">
+            <div style="float:right;">
+                <button id="createbtn" class="cvb_button" onclick="dropdown('join_dropdown')" style="margin-bottom:66px;float:right;height:30px;font-size:15px;text-align:center;margin-left:10px;">Join Collaborative Vision Building Session <i class="fa fa-share-alt" aria-hidden="true"></i></button>
+                <div id="join_dropdown" class="dropdown-content" style="width:470px;margin-top:30px;margin-left:10px;border:1px solid #0099CC;position:absolute;float:right;padding:5px;">
+                    <div id="load_share_div" style="font-size: 13px;font-family: verdana,sans-serif">
+                        <label style="float:left;clear:left;margin-top:10px;">Collaborative Vision Building Session Key:</label>
+                        <input style="width:458px;float:left;clear:left;border:1px solid #0099CC" id="share_id_input" type="text" name="share_id_input" placeholder="Key...">
+                        <button class="create_vision_btn cvb_button" style="clear:left;float:right;margin-top:10px;" onclick="dropdown('create_dropdown');joinSession();" id="share_id_button" action="{% url 'cvbapp_join' %}">Join</button>
+                    </div>
+                </div>
+            </div>
+            <div style="float:right;width:325px;">
                 <button id="createbtn" class="cvb_button" onclick="dropdown('create_dropdown')" style="margin-bottom:66px;float:right;height:30px;font-size:15px;text-align:center;">Create Collaborative Vision Building Session <i class="fa fa-plus" aria-hidden="true"></i></button>
-                <div id="create_dropdown" class="dropdown-content" style="width:470px;margin-top:30px;border:1px solid #0099CC;position:absolute;float:right;padding:5px;">
+                <div id="create_dropdown" class="dropdown-content" style="width:470px;margin-top:30px;margin-left:4px;border:1px solid #0099CC;position:absolute;float:right;padding:5px;">
                     <div id="vision_create_div" style="font-size: 13px;font-family: verdana,sans-serif">
                         <label style="float:left;clear:left;"><b>Name:</b></label>
                         <input style="width:458px;float:left;clear:left;border:1px solid #0099CC" id="session_name_input" type="text" name="session_name" placeholder="Name...">
@@ -488,6 +538,9 @@
                                document.getElementById("charcount").innerHTML = "<i>Remaining Characters: </i>" + (512 - $(this).val().length);
                             });
                         </script>
+
+                        <label style="float:left;clear:left;margin-top:10px;">Private:</label>
+                        <input id="session_private" type="checkbox" style="margin-bottom:10px;margin-top:13px;margin-left:10px;float:left;clear:right;">
 
                         <button class="create_vision_btn cvb_button" style="clear:right;" onclick="dropdown('create_dropdown');createSession();" id="session_create_button" action="{% url 'cvbapp_createsession' %}">Create</button>
                     </div>

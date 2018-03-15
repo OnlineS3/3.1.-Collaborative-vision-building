@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-import json
+import json, hashlib
 from django.http import HttpResponse, FileResponse
 import requests
 import pdfkit
@@ -9,7 +9,7 @@ import pdfkit
 from auth0.v3.authentication import GetToken
 from auth0.v3.authentication import Users
 
-from .models import VisionSession,VisionStatement,Channel,ScheduledMeeting,VisionReport
+from .models import VisionSession,VisionStatement,Channel,ScheduledMeeting,VisionReport,Shares
 
 rocketchat_url = "http://li1088-54.members.linode.com:3000"
 rocketchat_user = "admin"
@@ -41,7 +41,7 @@ def demo(request):
 	return render(request, 'cvbapp/demo.html')
 
 def login_view(request):
-	request.session['cvbapp_profile'] = json.loads( '{"email": "' + request.POST['username'] + '", "nickname": "' + request.POST['username'] + '"}')
+	request.session['cvbapp_profile'] = json.loads( '{"email": "' + "test2" + '", "nickname": "' + "test2" + '"}')
 	return redirect('cvbapp_index')
 
 
@@ -52,21 +52,24 @@ def logout_view(request):
 
 def create_visionsession(request):
 	if VisionSession.objects.filter(session_name=request.POST['session_name'].replace(" ", "")).count() == 0:
+		share_id_instance = hashlib.sha1(request.POST['session_name'] + request.session['cvbapp_profile']['email']).hexdigest()
 		r = requests.post(rocketchat_url+'/api/v1/login', data={'username': rocketchat_user, 'password': rocketchat_pass})
 		j = json.loads(r.text)
 		r = requests.post(rocketchat_url+'/api/v1/channels.create', auth=(rocketchat_user, rocketchat_pass),
-						  data={'name': request.POST['session_name'].replace(" ", "")},
+						  data={'name': share_id_instance.replace(" ", "")},
 						  headers={'X-Auth-Token': j['data']['authToken'], 'X-User-Id': j['data']['userId']})
 		print(r.text)
 		j = json.loads(r.text)
 
 		channel_instance = Channel.objects.create(room_id=j["channel"]["_id"], channel_name=j["channel"]["name"], rc_channel=rocketchat_url+'/channel/' + request.POST['session_name'].replace(" ", ""))
-
-		visionsession_instance = VisionSession.objects.create(user_email=request.session['cvbapp_profile']['email'],session_name=request.POST['session_name'],session_description=request.POST['session_description'],phase=2, channel=channel_instance, region=request.POST['region'])
+		visionsession_instance = VisionSession.objects.create(user_email=request.session['cvbapp_profile']['email'],session_name=request.POST['session_name'],session_description=request.POST['session_description'],phase=2, channel=channel_instance, region=request.POST['region'], share_id=share_id_instance, private=request.POST['private'])
 		visionsession_instance.save()
 		return redirect('cvbapp_index')
 	else:
-		return HttpResponse('a session with that name already exists', status=409)
+		names = ""
+		for vs in VisionSession.objects.filter(session_name=request.POST['session_name'].replace(" ", "")):
+			names += vs.session_name + ", ";
+		return HttpResponse('a session with that name already exists: ' + names, status=409)
 
 
 def delete_vision_session(request):
@@ -81,12 +84,29 @@ def delete_vision_session(request):
 	print(r.text)
 	j = json.loads(r.text)
 
-	visionsession_instance[0].delete()
+	visionsession_instance[0].channel.delete()
+	#visionsession_instance[0].delete()
 	request.session['delete_success']='true';
-	return redirect('cvbapp_index')
+	return redirect('cvbapp_access')
+
+def join_visionsession(request):
+	share_id = request.POST['share_id']
+	if VisionSession.objects.filter(share_id=share_id).count() > 0:
+		visionsession_instance = VisionSession.objects.get(share_id=share_id)
+		if visionsession_instance.user_email != request.session['cvbapp_profile']['email']:
+			shares_instance = Shares.objects.create(session=visionsession_instance,
+													shared_with=request.session['cvbapp_profile']['email'])
+			shares_instance.save()
+			return HttpResponse('Success', status=200)
+		else:
+			return HttpResponse('You cannot join a session you created.', status=403)
+
+	else:
+		return HttpResponse('Invalid Key', status=403)
 
 
-def get_visionsessions(request):
+
+def get_visionsessions2(request):
 	visionsessions = VisionSession.objects.all()
 	data = {}
 	data['sessions'] = []
@@ -99,10 +119,46 @@ def get_visionsessions(request):
 	j = json.dumps(data)
 	return HttpResponse(j)
 
+def get_visionsessions(request):
+	data = {}
+	data['sessions'] = {}
+	data['sessions']['created'] = []
+	data['sessions']['joined'] = []
+	data['sessions']['public'] = []
+
+	createdvisionsessions = VisionSession.objects.filter(user_email=request.session['cvbapp_profile']['email'])
+	for vs in createdvisionsessions:
+		session = {}
+		session['user_email'] = vs.user_email
+		session['session_name'] = vs.session_name
+		session['session_description'] = vs.session_description
+		data['sessions']['created'].append(session)
+
+	joinedvisionsessions = Shares.objects.filter(shared_with=request.session['cvbapp_profile']['email'])
+	for sh in joinedvisionsessions:
+		session = {}
+		session['user_email'] = sh.session.user_email
+		session['session_name'] = sh.session.session_name
+		session['session_description'] = sh.session.session_description
+		data['sessions']['joined'].append(session)
+
+	publicvisionsessions = VisionSession.objects.filter(private=False)
+	for vs in publicvisionsessions:
+		if (vs.user_email != request.session['cvbapp_profile']['email']) and (vs not in [sh.session for sh in Shares.objects.filter(shared_with=request.session['cvbapp_profile']['email'])]):
+			session = {}
+			session['user_email'] = vs.user_email
+			session['session_name'] = vs.session_name
+			session['session_description'] = vs.session_description
+			data['sessions']['public'].append(session)
+
+	j = json.dumps(data)
+	return HttpResponse(j)
 
 def get_vision_profile(request):
 	session_name = request.GET['session_name']
-	visionsession_instance = VisionSession.objects.filter(session_name=session_name)
+	visionsession_instance = VisionSession.objects.get(session_name=session_name)
+
+	share_id = visionsession_instance.share_id
 
 	submitted_statement_p2 = ""
 	if VisionStatement.objects.filter(user_email=request.session['cvbapp_profile']['email'], session=visionsession_instance, phase=2).count() > 0:
@@ -124,23 +180,24 @@ def get_vision_profile(request):
 	print "p5: " + submitted_statement_p5
 
 	submitted_meeting_p4 = ""
-	if ScheduledMeeting.objects.filter(channel = visionsession_instance[0].channel, phase=4).count() > 0:
+	if ScheduledMeeting.objects.filter(channel = visionsession_instance.channel, phase=4).count() > 0:
 		submitted_meeting_p4 = ScheduledMeeting.objects.filter(channel = visionsession_instance[0].channel, phase=4)[0].datetime
 
 	submitted_report = ""
-	if VisionReport.objects.filter(session=visionsession_instance[0]).count() > 0:
-		submitted_report = VisionReport.objects.filter(session=visionsession_instance[0])[0].vision_report
+	if VisionReport.objects.filter(session=visionsession_instance).count() > 0:
+		submitted_report = VisionReport.objects.filter(session=visionsession_instance)[0].vision_report
 
 	context = {"session_name":session_name,
-			   "session_description": visionsession_instance[0].session_description,
-			   "user_email": visionsession_instance[0].user_email,
-			   "phase": visionsession_instance[0].phase,
-			   "rc_channel": visionsession_instance[0].channel.rc_channel,
+			   "session_description": visionsession_instance.session_description,
+			   "user_email": visionsession_instance.user_email,
+			   "phase": visionsession_instance.phase,
+			   "rc_channel": visionsession_instance.channel.rc_channel,
 			   "submitted_statement_p2": submitted_statement_p2,
 			   "submitted_statement_p3": submitted_statement_p3,
 			   "submitted_statement_p5": submitted_statement_p5,
 			   "submitted_meeting_p4": submitted_meeting_p4,
-			   "submitted_report": submitted_report}
+			   "submitted_report": submitted_report,
+			   "share_id": share_id}
 	return render(request, 'cvbapp/visionprofile.html', context)
 
 
@@ -171,7 +228,12 @@ def search_sessions(request):
 	searchterm = request.GET['searchterm']
 	visionsessions_str = ""
 	data = {}
-	data['sessions'] = []
+	data['sessions'] = {}
+	data['sessions']['created'] = []
+	data['sessions']['joined'] = []
+	data['sessions']['public'] = []
+	joinedvisionsessions = Shares.objects.filter(shared_with=request.session['cvbapp_profile']['email'])
+
 	if request.GET['searchtype'] == "Name" or request.GET['searchtype'] == "All":
 		visionsessions = VisionSession.objects.filter(session_name__contains=searchterm)
 		for vs in visionsessions:
@@ -179,9 +241,14 @@ def search_sessions(request):
 			session['user_email'] = vs.user_email
 			session['session_name'] = vs.session_name
 			session['session_description'] = vs.session_description
-			if not session in data['sessions']:
-				data['sessions'].append(session)
-			print vs.session_name
+
+			if (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']):
+				if vs.user_email == request.session['cvbapp_profile']['email']:
+					data['sessions']['created'].append(session)
+				elif vs in joinedvisionsessions:
+					data['sessions']['created'].append(session)
+				elif vs.private == False:
+					data['sessions']['public'].append(session)
 	if request.GET['searchtype'] == "Description" or request.GET['searchtype'] == "All":
 		visionsessions = VisionSession.objects.filter(session_description__contains=searchterm)
 		for vs in visionsessions:
@@ -189,8 +256,13 @@ def search_sessions(request):
 			session['user_email'] = vs.user_email
 			session['session_name'] = vs.session_name
 			session['session_description'] = vs.session_description
-			if not session in data['sessions']:
-				data['sessions'].append(session)
+			if (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']):
+				if vs.user_email == request.session['cvbapp_profile']['email']:
+					data['sessions']['created'].append(session)
+				elif vs in joinedvisionsessions:
+					data['sessions']['created'].append(session)
+				elif vs.private == False:
+					data['sessions']['public'].append(session)
 	if request.GET['searchtype'] == "Region" or request.GET['searchtype'] == "All":
 		visionsessions = VisionSession.objects.filter(region__contains=searchterm)
 		for vs in visionsessions:
@@ -198,8 +270,13 @@ def search_sessions(request):
 			session['user_email'] = vs.user_email
 			session['session_name'] = vs.session_name
 			session['session_description'] = vs.session_description
-			if not session in data['sessions']:
-				data['sessions'].append(session)
+			if (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']) and (not vs in data['sessions']['created']):
+				if vs.user_email == request.session['cvbapp_profile']['email']:
+					data['sessions']['created'].append(session)
+				elif vs in joinedvisionsessions:
+					data['sessions']['created'].append(session)
+				elif vs.private == False:
+					data['sessions']['public'].append(session)
 	j = json.dumps(data)
 	return HttpResponse(j)
 

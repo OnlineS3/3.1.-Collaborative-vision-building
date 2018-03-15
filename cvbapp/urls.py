@@ -25,5 +25,6 @@ urlpatterns = [
 	url(r'^exporttopdf$', views.export_to_pdf, name='cvbapp_exporttopdf'),
 	url(r'^callback$', views.callback, name='cvbapp_callback'),
 	url(r'^access$', views.access, name='cvbapp_access'),
-	url(r'^demo$', views.demo, name='cvbapp_demo')
+	url(r'^demo$', views.demo, name='cvbapp_demo'),
+	url(r'^join$', views.join_visionsession, name='cvbapp_join')
 ]
