@@ -45,6 +45,18 @@
                                 <a href="#" onclick="document.getElementById('share_modal').style.display = 'block';">Share</a>
                             </div>
                         </div>
+                    {% elif joined %}
+                        <div id="owner_dropdown" class="dropdown" style="float:right">
+                            <button onclick="dropdown('myDropdown')" class="dropbtn cvb_button"><i class="fa fa-chevron-down" aria-hidden="true"></i>
+    </button>
+                            <div id="myDropdown" class="dropdown-content">
+                                <form id="leave_vision_form" method="post" action="{% url 'cvbapp_leave' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="share_id" value="{{ share_id }}">
+                                    <a href="#" onclick="document.getElementById('leave_vision_form').submit()">Leave Session</a>
+                                </form>
+                            </div>
+                        </div>
                     {% endif %}
                 </div>
                 <div class="phase_content">

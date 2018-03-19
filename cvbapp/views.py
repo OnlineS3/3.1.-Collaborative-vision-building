@@ -105,7 +105,27 @@ def join_visionsession(request):
 	else:
 		return HttpResponse('Invalid Key', status=403)
 
+#get session
+#get share from session and email
+#remove from db
+def leave_visionsession(request):
+	share_id = request.POST['share_id']
+	if VisionSession.objects.filter(share_id=share_id).count() > 0:
+		visionsession_instance = VisionSession.objects.get(share_id=share_id)
+		if visionsession_instance.user_email != request.session['cvbapp_profile']['email']:
 
+			if Shares.objects.filter(session=visionsession_instance, shared_with=request.session['cvbapp_profile']['email']):
+				shares_instance = Shares.objects.get(session=visionsession_instance,
+														shared_with=request.session['cvbapp_profile']['email'])
+				shares_instance.delete()
+				return redirect('cvbapp_access')
+			else:
+				return HttpResponse('You cannot leave a session you have not joined', status=403)
+		else:
+			return HttpResponse('You cannot leave a session you created.', status=403)
+
+	else:
+		return HttpResponse('Invalid Key', status=403)
 
 def get_visionsessions2(request):
 	visionsessions = VisionSession.objects.all()
@@ -162,6 +182,11 @@ def get_vision_profile(request):
 	share_id = request.GET['share_id']
 	visionsession_instance = VisionSession.objects.get(share_id=share_id)
 
+	joined = False
+
+	if Shares.objects.filter(session=visionsession_instance, shared_with=request.session['cvbapp_profile']['email']).count() > 0:
+		joined = True
+
 	session_name = visionsession_instance.session_name
 
 	submitted_statement_p2 = ""
@@ -201,7 +226,8 @@ def get_vision_profile(request):
 			   "submitted_statement_p5": submitted_statement_p5,
 			   "submitted_meeting_p4": submitted_meeting_p4,
 			   "submitted_report": submitted_report,
-			   "share_id": share_id}
+			   "share_id": share_id,
+			   "joined": joined}
 	return render(request, 'cvbapp/visionprofile.html', context)
 
 
