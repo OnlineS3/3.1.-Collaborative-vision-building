@@ -74,8 +74,8 @@ def create_visionsession(request):
 
 
 def delete_vision_session(request):
-	session_name = request.POST['session_name']
-	visionsession_instance = VisionSession.objects.filter(session_name=session_name)
+	share_id = request.POST['share_id']
+	visionsession_instance = VisionSession.objects.filter(share_id=share_id)
 
 	r = requests.post(rocketchat_url+'/api/v1/login', data={'username': rocketchat_user, 'password': rocketchat_pass})
 	j = json.loads(r.text)
@@ -232,15 +232,15 @@ def get_vision_profile(request):
 
 
 def edit_vision_profile(request):
-	session_name = request.GET['session_name']
-	visionsession_instance = VisionSession.objects.filter(session_name=session_name)
-	context = {"session_name":session_name, "session_description": visionsession_instance[0].session_description, "user_email": visionsession_instance[0].user_email}
+	share_id = request.GET['share_id']
+	visionsession_instance = VisionSession.objects.get(share_id=share_id)
+	context = {"session":visionsession_instance}
 	return render(request, 'cvbapp/editvisionprofile.html', context)
 
 
 def update_vision_profile(request):
-	session_name = request.POST['old_session_name']
-	visionsession_instance = VisionSession.objects.get(session_name=session_name)
+	share_id = request.POST['share_id']
+	visionsession_instance = VisionSession.objects.get(share_id=share_id)
 	if 'session_name' in request.POST:
 		visionsession_instance.session_name = request.POST['session_name']
 	if 'session_description' in request.POST:
@@ -251,7 +251,8 @@ def update_vision_profile(request):
 		visionsession_instance.phase -= 1
 	visionsession_instance.save()
 	return redirect(request.POST['redirect_url']+'?session_name=' + (request.POST['session_name'] if 'session_name' in request.POST else 'null') +
-					"&session_description=" + (request.POST['session_description'] if 'session_description' in request.POST else 'null'))
+					"&session_description=" + (request.POST['session_description'] if 'session_description' in request.POST else 'null') +
+					"&share_id=" + (request.POST['share_id'] if 'share_id' in request.POST else 'null'))
 
 
 def search_sessions(request):

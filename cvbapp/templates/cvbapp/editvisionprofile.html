@@ -16,18 +16,18 @@
 <!-- CVBAPP Content -->
     <div style="float:left; margin-left: 66px; width:745px;">
         <h1>Collaborative Vision Building</h1>
-        <form method="post" action="{% url 'cvbapp_updatevisionprofile' %}?session_name={{ session_name }}&session_description={{ session_description }}">
+        <form method="post" action="{% url 'cvbapp_updatevisionprofile' %}?session_name={{ session.session_name }}&session_description={{ session.session_description }}">
             {% csrf_token %}
             <p>Collaborative Vision Building Session Name:</p>
-            <input type="text" name="session_name" value="{{ session_name }}">
+            <input type="text" name="session_name" value="{{ session.session_name }}">
             <p>Collaborative Vision Building Session Description</p>
-            <input type="text" name="session_description" value="{{ session_description }}">
-            <input type="hidden" name="old_session_name" value="{{ session_name }}">
+            <input type="text" name="session_description" value="{{ session.session_description }}">
+            <input type="hidden" name="old_session_name" value="{{ session.session_name }}">
+            <input type="hidden" name="share_id" value="{{ session.share_id }}">
             <input type="hidden" name="redirect_url" value="/cvbapp/visionprofile">
             <input type="submit" value="Save Changes">
         </form>
     </div>
-    <button onclick="console.log('{% url 'cvbapp_updatevisionprofile' %}')">Check url</button>
 <!-- CVBAPP Content END -->
 <!-- Page Menus -->
     <div style="float: left; margin-left: 66px; margin-top: 61px">

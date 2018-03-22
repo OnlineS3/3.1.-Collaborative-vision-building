@@ -334,10 +334,12 @@
         </form>
         {% if request.session.cvbapp_profile.email == user_email %}
             <form id="edit_vision_form" method="get" action="{% url 'cvbapp_editvisionprofile' %}">
+                <input type="hidden" name="share_id" value="{{ share_id }}">
                 <input type="hidden" name="session_name" value="{{ session_name }}">
             </form>
             <form id="advance_vision_form" method="post" action="{% url 'cvbapp_updatevisionprofile' %}">
                 {% csrf_token %}
+                <input type="hidden" name="share_id" value="{{ share_id }}">
                 <input type="hidden" name="old_session_name" value="{{ session_name }}">
                 <input type="hidden" name="session_name" value="{{ session_name }}">
                 <input type="hidden" name="phase_advance" value="true">
@@ -345,6 +347,7 @@
             </form>
             <form id="decrease_vision_form" method="post" action="{% url 'cvbapp_updatevisionprofile' %}">
                 {% csrf_token %}
+                <input type="hidden" name="share_id" value="{{ share_id }}">
                 <input type="hidden" name="old_session_name" value="{{ session_name }}">
                 <input type="hidden" name="session_name" value="{{ session_name }}">
                 <input type="hidden" name="phase_decrease" value="true">
@@ -352,6 +355,7 @@
             </form>
             <form id="delete_vision_form" method="post" action="{% url 'cvbapp_deletesession' %}">
                 {% csrf_token %}
+                <input type="hidden" name="share_id" value="{{ share_id }}">
                 <input type="hidden" name="session_name" value="{{ session_name }}">
                 <input type="hidden" name="deleted_vision" value="true">
             </form>
